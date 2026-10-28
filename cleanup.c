@@ -89,11 +89,11 @@ static void rpmOneFileCleanup(char *file) {
     rdfNamespace rpmNs;
     rdfNamespace rdfNs;
     rdfDescription desc;
-    char *name;
-    char *version;
-    char *release;
-    char *arch;
-    char *URL;
+    char *name = NULL;
+    char *version = NULL;
+    char *release = NULL;
+    char *arch = NULL;
+    char *URL = NULL;
     int   aboutRPM = 0;
     int   isOk = 0;
     rpmDataPtr found;
@@ -162,37 +162,33 @@ static void rpmOneFileCleanup(char *file) {
 	if (name == NULL) {
 	    if (rpm2htmlVerbose)
 		printf("%s RDF schema invalid : no Name\n", file);
-	    rdfDestroySchema(rdf);
 	    unlink(file);
 	    nb_removed_files++;
-	    return;
+	    goto cleanup_values;
 	}
 	rdfGetValue(desc, "Version", rpmNs, &version, NULL);
 	if (version == NULL) {
 	    if (rpm2htmlVerbose)
 		printf("%s RDF schema invalid : no Version\n", file);
-	    rdfDestroySchema(rdf);
 	    unlink(file);
 	    nb_removed_files++;
-	    return;
+	    goto cleanup_values;
 	}
 	rdfGetValue(desc, "Release", rpmNs, &release, NULL);
 	if (release == NULL) {
 	    if (rpm2htmlVerbose)
 		printf("%s RDF schema invalid : no Release\n", file);
-	    rdfDestroySchema(rdf);
 	    unlink(file);
 	    nb_removed_files++;
-	    return;
+	    goto cleanup_values;
 	}
 	rdfGetValue(desc, "Arch", rpmNs, &arch, NULL);
 	if (arch == NULL) {
 	    if (rpm2htmlVerbose)
 		printf("%s RDF schema invalid : no Arch\n", file);
-	    rdfDestroySchema(rdf);
 	    unlink(file);
 	    nb_removed_files++;
-	    return;
+	    goto cleanup_values;
 	}
 
         /*********************
@@ -216,7 +212,7 @@ static void rpmOneFileCleanup(char *file) {
 	if (found) {
 	    isOk = 1;
 	}
-	if (URL != NULL) free(URL);
+	/* The RDF strings are released at cleanup_values. */
 
         /*
 	 * Skip to next Description in the RDf file.
@@ -232,8 +228,14 @@ static void rpmOneFileCleanup(char *file) {
     }
 
     /*
-     * Cleanup.
+     * Cleanup the strings allocated by the RDF API.
      */
+cleanup_values:
+    xmlFree(URL);
+    xmlFree(name);
+    xmlFree(version);
+    xmlFree(release);
+    xmlFree(arch);
     rdfDestroySchema(rdf);
 }
 
@@ -319,11 +321,11 @@ static void rpmOneResourceCleanup(char *file) {
     rdfNamespace rpmNs;
     rdfNamespace rdfNs;
     rdfDescription desc;
-    char *name;
-    char *version;
-    char *release;
-    char *arch;
-    char *URL;
+    char *name = NULL;
+    char *version = NULL;
+    char *release = NULL;
+    char *arch = NULL;
+    char *URL = NULL;
     int   aboutRPM = 0;
     int   isOk = 0;
     rpmDataPtr found;
@@ -392,29 +394,25 @@ static void rpmOneResourceCleanup(char *file) {
 	if (name == NULL) {
 	    if (rpm2htmlVerbose)
 		printf("%s RDF schema invalid : no Name\n", file);
-	    rdfDestroySchema(rdf);
-	    return;
+	    goto cleanup_values;
 	}
 	rdfGetValue(desc, "Version", rpmNs, &version, NULL);
 	if (version == NULL) {
 	    if (rpm2htmlVerbose)
 		printf("%s RDF schema invalid : no Version\n", file);
-	    rdfDestroySchema(rdf);
-	    return;
+	    goto cleanup_values;
 	}
 	rdfGetValue(desc, "Release", rpmNs, &release, NULL);
 	if (release == NULL) {
 	    if (rpm2htmlVerbose)
 		printf("%s RDF schema invalid : no Release\n", file);
-	    rdfDestroySchema(rdf);
-	    return;
+	    goto cleanup_values;
 	}
 	rdfGetValue(desc, "Arch", rpmNs, &arch, NULL);
 	if (arch == NULL) {
 	    if (rpm2htmlVerbose)
 		printf("%s RDF schema invalid : no Arch\n", file);
-	    rdfDestroySchema(rdf);
-	    return;
+	    goto cleanup_values;
 	}
 
         /***********
@@ -451,8 +449,14 @@ static void rpmOneResourceCleanup(char *file) {
 	nb_removed_files++;
     }
     /*
-     * Cleanup.
+     * Cleanup the strings allocated by the RDF API.
      */
+cleanup_values:
+    xmlFree(URL);
+    xmlFree(name);
+    xmlFree(version);
+    xmlFree(release);
+    xmlFree(arch);
     rdfDestroySchema(rdf);
 }
 

@@ -1,5 +1,15 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* cleanup.c (rpmOneFileCleanup, rpmOneResourceCleanup): Release
+	RDF description hrefs and package metadata strings returned by
+	the libxml2-based RDF API on success and on missing-field errors.
+	Initialize the local string pointers and use a shared cleanup
+	path to avoid leaking partially retrieved metadata.  Use xmlFree
+	for libxml2 allocations; keep the existing distinction between
+	invalid package RDF files and resource RDF files.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* cleanup.c (rpmOneFileCleanup, rpmOneResourceCleanup): Check the
 	RPM namespace pointer after looking it up, rather than testing the
 	already validated RDF namespace again.  Test the first description
