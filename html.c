@@ -681,20 +681,23 @@ char *convertSIG(rpmSigPtr sig) {
 int needsDump(char *htmlFileName, time_t rpmFileTimestamp) {
     struct stat buf;
 
-    if (!rpm2html_dump_html_only_if_rpm_newer)
-    	// option turned off => update needed always
-    	return 1;
+    if (!rpm2html_dump_html_only_if_rpm_newer) {
+        // option turned off => update needed always
+        return 1;
+    }
 
-	// determine the last modification time of the HTML file
-    if (stat(htmlFileName, &buf) != 0)
-    	// well, something bad happened so we err in the direction of caution and tell the caller update is needed
-    	return 1;
+    // determine the last modification time of the HTML file
+    if (stat(htmlFileName, &buf) != 0) {
+        // err on the side of caution and regenerate HTML if stat fails
+        return 1;
+    }
 
-	// compare time stamps
-    if (rpmFileTimestamp < buf.st_mtime)
-    	return 0;
+    // compare time stamps
+    if (rpmFileTimestamp < buf.st_mtime) {
+        return 0;
+    }
 
-	return 1;
+    return 1;
 }
 
 /*

@@ -1,5 +1,11 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* html.c (needsDump): Add braces to the existing option,
+	stat, and timestamp conditions and normalize their indentation.
+	Make the update decisions unambiguous without changing behavior.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* cleanup.c (rpmOneFileCleanup, rpmOneResourceCleanup): Release
 	RDF description hrefs and package metadata strings returned by
 	the libxml2-based RDF API on success and on missing-field errors.
