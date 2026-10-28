@@ -710,6 +710,7 @@ rpmSubdirPtr rpmNewSubdir(rpmSubdirPtr dir, const char *name,
     memset(res->subdirs, 0, res->max_subdirs * sizeof(*res->subdirs));
     if (dir == NULL) {
         res->htmlpath = xmlStrdup(name);
+        res->rpmpath = xmlStrdup(name);
 	res->parent = NULL;
     } else {
         res->parent = dir;
@@ -1333,8 +1334,11 @@ void rpmdataCleanup(void) {
         rpmHashTable[i] = NULL;
         rpmRessHashTable[i] = NULL;
     }
+    if (dirTree != NULL) {
+        rpmFreeSubdir(dirTree);
+        dirTree = NULL;
+    }
     dirList = NULL;
-    dirTree = NULL;
     treeRoot = NULL;
     rpmHashInitialize();
 }

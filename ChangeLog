@@ -1,5 +1,13 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rpmdata.c (rpmNewSubdir): Initialize the RPM path for root
+	directory nodes as well as the HTML path, so that descendants
+	can inherit it and rpmFreeSubdir can safely release it.
+	(rpmdataCleanup): Free the global directory tree after HTML
+	generation and before resetting its pointer.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rpmopen.c (rpmDirScanOneDir): Free the temporary real directory
 	tree and RPM directory tree after scanning, as already done by
 	rpmDirScanOneDist. Clear both pointers after releasing them.
