@@ -1,5 +1,14 @@
 2026-10-28  OpenAI ChatGPT
 
+	* html.c (buffer2_size): Track CVE output buffer capacity using
+	size_t instead of int.
+	(nextCVEBufferSize): Check for size_t overflow before doubling
+	the CVE output buffer allocation size.
+	(convertCVE): Preserve the output offset as size_t across
+	reallocations and use checked capacity growth.
+
+2026-10-28  OpenAI ChatGPT
+
 	* html.c (convertCVE): Copy a partially matched CVE/CAN identifier
 	to the output when the input ends before the full identifier is
 	recognized. Do not silently truncate changelog text at end-of-input.

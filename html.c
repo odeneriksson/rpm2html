@@ -465,7 +465,17 @@ char *convertXML(const char *str) {
  * The string returned is a shared location.
  */
 static char *buffer2 = NULL;
-static int buffer2_size = 2000;
+static size_t buffer2_size = 2000;
+
+/* Check for size_t overflow before doubling the CVE output buffer. */
+static size_t nextCVEBufferSize(size_t current) {
+    if (current > SIZE_MAX / 2) {
+        fputs("convertCVE: output buffer size overflow\n", stderr);
+        exit(1);
+    }
+    return current * 2;
+}
+
 enum STATE { C = 1, CV = 2, CVE = 3, CA = 4, CAN = 5,
              DIGIT1 = 6, DIGIT2 = 7 };
 const char *convertCVE(const char *str) {
@@ -491,9 +501,9 @@ const char *convertCVE(const char *str) {
 
     while (*str != '\0') {
         if (cur >= end) {
-	    int delta = cur - buffer2;
+	    size_t delta = (size_t) (cur - buffer2);
 
-	    buffer2_size *= 2;
+	    buffer2_size = nextCVEBufferSize(buffer2_size);
 	    buffer2 = (char *) xmlRealloc(buffer2, buffer2_size * sizeof(char));
 	    if (buffer2 == NULL) {
 		perror("xmlRealloc failed");
