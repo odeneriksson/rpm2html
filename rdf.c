@@ -1135,19 +1135,16 @@ void dumpDistRdf(rpmDirPtr dir) {
 	}
 	if (fread(buffer2, size, 1, output) != 1) {
 	    fprintf(stderr, "Problem reading from %s !\n", file);
-	}
-	fclose(output);
-
-	/*
-	 * Now compare the content !
-	 */
-	if (!memcmp(buffer, buffer2, size)) {
+	} else if (!memcmp(buffer, buffer2, size)) {
+	    /* Compare only after a successful read. */
+	    fclose(output);
 	    xmlFree(buffer2);
 	    xmlFree(buffer);
 	    if (rpm2htmlVerbose > 1)
 		fprintf(stderr, "File %s : Content identical !\n", file);
 	    return;
 	}
+	fclose(output);
 	xmlFree(buffer2);
     }
 
@@ -1165,9 +1162,10 @@ void dumpDistRdf(rpmDirPtr dir) {
     }
     if (fwrite(buffer, size, 1, output) != 1) {
         fprintf(stderr, "Problem writing to %s !\n", file);
-	xmlFree(buffer);
     }
-    fclose(output);
+    if (fclose(output) != 0) {
+        fprintf(stderr, "Problem closing %s after writing !\n", file);
+    }
     xmlFree(buffer);
 }
 
