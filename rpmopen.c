@@ -1409,6 +1409,13 @@ rpmDirScanOneDir(const char *directory)
             printf("Scanning directory %s for RPMs\n", dir->rpmdir);
         rpmDirScan(dir, dirTree);
     }
+
+    if (dir->root != NULL) {
+        rpmDestroyRealRoot(dir->root);
+        dir->root = NULL;
+    }
+    rpmFreeSubdir(dirTree);
+    dirTree = NULL;
 }
 
 

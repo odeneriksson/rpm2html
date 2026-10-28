@@ -1,5 +1,11 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rpmopen.c (rpmDirScanOneDir): Free the temporary real directory
+	tree and RPM directory tree after scanning, as already done by
+	rpmDirScanOneDist. Clear both pointers after releasing them.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rpmopen.c (rpmDirScanOneDir): Remove the unused cur variable and
 	call the RPM database and directory scanners directly.
 	(rpmDirScanOneDist): Likewise. Keep the scanner calls and their
