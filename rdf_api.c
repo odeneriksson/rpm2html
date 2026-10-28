@@ -492,15 +492,10 @@ rdfNamespace rdfElemGetNamespace(rdfElement elem) {
     return(elem->ns);
 }
 void rdfElemSetValue(rdfElement elem, const char *value) {
-    xmlChar *tmp;
+    xmlChar *tmp = xmlEncodeEntitiesReentrant(elem->doc, BAD_CAST value);
 
-    if (elem->xmlChildrenNode != NULL) {
-        fprintf(stderr, "rdfElemSetValue : elem %s has xmlChildrenNode\n", elem->name);
-	return;
-    }
-    if (elem->xmlChildrenNode != NULL) xmlFreeNodeList(elem->xmlChildrenNode);
-    tmp = xmlEncodeEntitiesReentrant(elem->doc, BAD_CAST value);
-    elem->xmlChildrenNode = xmlStringGetNodeList(elem->doc,  tmp);
+    if (tmp == NULL) return;
+    xmlNodeSetContent(elem, tmp);
     xmlFree(tmp);
 }
 

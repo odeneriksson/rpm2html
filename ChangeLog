@@ -1,5 +1,11 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rdf_api.c (rdfElemSetValue): Allow replacement of existing RDF
+	element values.  Use xmlNodeSetContent to maintain libxml2 child-node
+	links and release superseded children, retaining entity encoding.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rdf_api.c (rdfNewSchema, rdfNewNamespace, rdfGetNamespace,
 	rdfAddDescription, rdfSetElementResource, rdfSetValue,
 	rdfBagCreate, rdfBagAddValue, rdfElemSetValue): Pass xmlChar
