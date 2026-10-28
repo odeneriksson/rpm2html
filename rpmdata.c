@@ -28,6 +28,12 @@
 
 int rpmNameCmp(const rpmData *a, const rpmData *b);
 
+/* Duplicate a C string using libxml2's allocator.  The returned
+ * pointer remains owned by its caller and is released with xmlFree(). */
+static char *rpmdataXmlStrdup(const char *value) {
+    return (char *) xmlStrdup(BAD_CAST value);
+}
+
 /*
  * An hash table for the RPM list
  */
@@ -224,7 +230,7 @@ rpmRessPtr rpmRessAdd(char *ress, rpmDataPtr rpm, int installed) {
 	         strerror(errno));
          return(NULL);
     }
-    cur->name = xmlStrdup(ress);
+    cur->name = rpmdataXmlStrdup(ress);
     cur->nb_provider = 0;
     cur->stamp = rpm->extra->stamp;
     if (installed) {
@@ -293,9 +299,9 @@ rpmRessPtr rpmRequAdd(char *requ, char * requv, rpm_dep_flag requf, rpmDataPtr r
 	         strerror(errno));
          return(NULL);
     }
-    cur->name = xmlStrdup(requ);
+    cur->name = rpmdataXmlStrdup(requ);
     if (requv != NULL) 
-	cur->version = xmlStrdup(requv);
+	cur->version = rpmdataXmlStrdup(requv);
     cur->flag = requf;
     cur->nb_provider = 0;
     cur->stamp = rpm->extra->stamp;
@@ -699,18 +705,18 @@ rpmSubdirPtr rpmNewSubdir(rpmSubdirPtr dir, const char *name,
         fprintf(stderr, "rpmNewSubdir : running out of memory !\n");
 	exit(1);
     }
-    res->name = xmlStrdup(name);
+    res->name = rpmdataXmlStrdup(name);
     res->nb_subdirs = 0;
     if (color)
-        res->color = xmlStrdup(color);
+        res->color = rpmdataXmlStrdup(color);
     else
         res->color = NULL;
     res->html = html;
 
     memset(res->subdirs, 0, res->max_subdirs * sizeof(*res->subdirs));
     if (dir == NULL) {
-        res->htmlpath = xmlStrdup(name);
-        res->rpmpath = xmlStrdup(name);
+        res->htmlpath = rpmdataXmlStrdup(name);
+        res->rpmpath = rpmdataXmlStrdup(name);
 	res->parent = NULL;
     } else {
         res->parent = dir;
@@ -720,20 +726,20 @@ rpmSubdirPtr rpmNewSubdir(rpmSubdirPtr dir, const char *name,
 	    if (dir->htmlpath[0] != '\0') {
 		char buf[500];
 		snprintf(buf, sizeof(buf), "%s/%s", dir->htmlpath, name);
-		res->htmlpath = xmlStrdup(buf);
+		res->htmlpath = rpmdataXmlStrdup(buf);
 	    } else
-		res->htmlpath = xmlStrdup(name);
+		res->htmlpath = rpmdataXmlStrdup(name);
 	} else
-	    res->htmlpath = xmlStrdup(htmlpath);
+	    res->htmlpath = rpmdataXmlStrdup(htmlpath);
 	if (rpmpath == NULL) {
 	    if (dir->rpmpath[0] != '\0') {
 		char buf[500];
 		snprintf(buf, sizeof(buf), "%s/%s", dir->rpmpath, name);
-		res->rpmpath = xmlStrdup(buf);
+		res->rpmpath = rpmdataXmlStrdup(buf);
 	    } else
-		res->rpmpath = xmlStrdup(name);
+		res->rpmpath = rpmdataXmlStrdup(name);
 	} else
-	    res->rpmpath = xmlStrdup(rpmpath);
+	    res->rpmpath = rpmdataXmlStrdup(rpmpath);
 	if (dir->nb_subdirs >= dir->max_subdirs) {
 	    dir->max_subdirs *= 2;
 	    dir->subdirs = (rpmSubdirPtr *) xmlRealloc(dir->subdirs,
@@ -965,7 +971,7 @@ rpmRealDirPtr rpmCreateRealRoot(void) {
 	exit(1);
     }
     res->parent = NULL;
-    res->name = xmlStrdup("/");
+    res->name = rpmdataXmlStrdup("/");
     res->nb_elem = 0;
     res->elems = (void *) xmlMalloc(16 * sizeof(void *));
     res->names = (void *) xmlMalloc(16 * sizeof(char *));
@@ -1047,7 +1053,7 @@ add_first_elem:
      * Create the new entry.
      */
     parent->elems[i] = elem;
-    parent->names[i] = xmlStrdup(file);
+    parent->names[i] = rpmdataXmlStrdup(file);
     parent->flags[i] = 0;
     return(i);
 }
@@ -1079,7 +1085,7 @@ rpmRealDirPtr rpmGetRealSubdir(rpmRealDirPtr parent, const char *subdir) {
 	exit(1);
     }
     res->parent = parent;
-    res->name = xmlStrdup(subdir);
+    res->name = rpmdataXmlStrdup(subdir);
     res->nb_elem = 0;
     res->elems = (void *) xmlMalloc(16 * sizeof(void *));
     res->names = (void *) xmlMalloc(16 * sizeof(char *));

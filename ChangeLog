@@ -1,5 +1,15 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rpmdata.c (rpmdataXmlStrdup): Add a file-local wrapper around
+	xmlStrdup() for copying ordinary C strings into libxml2-managed
+	allocations while preserving their char * representation.
+	(rpmRessAdd, rpmRequAdd, rpmNewSubdir, rpmCreateRealRoot,
+	rpmGetRealFile, rpmGetRealSubdir): Use the wrapper for resource
+	metadata and directory names/paths.  Preserve existing ownership
+	and xmlFree() handling.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rdf.c (rpmOpenRdfFile): Pass XML attribute names as xmlChar strings
 	and explicitly convert the temporary xmlGetProp() value when passing
 	it to rpmRequAdd(), which duplicates that string before it is freed.
