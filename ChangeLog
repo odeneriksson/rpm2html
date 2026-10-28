@@ -1,5 +1,12 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rdf.c (rdfXmlStrdup): New file-local helper to duplicate conventional
+	C strings using libxml2 and return them as char pointers.
+	(rpmOpenRdfFile): Use rdfXmlStrdup for ten fallback metadata and RPM
+	filename copies, preserving existing allocation and ownership.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rdf_api.c (rdfElemSetValue): Allow replacement of existing RDF
 	element values.  Use xmlNodeSetContent to maintain libxml2 child-node
 	links and release superseded children, retaining entity encoding.

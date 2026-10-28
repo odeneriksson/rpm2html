@@ -38,6 +38,13 @@
 #error Sorry you really need snprintf for basic security reasons
 #endif
 
+/* Keep rpm2html metadata as char * at the libxml2 string boundary. */
+static char *
+rdfXmlStrdup(const char *value)
+{
+    return (char *) xmlStrdup(BAD_CAST value);
+}
+
 /*
  * Open and process an RDF file in the incoming tree of an rpm2html mirror.
  */
@@ -248,13 +255,13 @@ rpmDataPtr rpmOpenRdfFile(char *file) {
     if (value != NULL) {
         rpm->arch = stringAdd(value);
 	xmlFree(value);
-    } else rpm->arch = xmlStrdup("noarch");
+    } else rpm->arch = rdfXmlStrdup("noarch");
 
     rdfGetValue(desc, "Os", rpmNs, &value, NULL);
     if (value != NULL) {
         rpm->os = stringAdd(value);
 	xmlFree(value);
-    } else rpm->os = xmlStrdup("linux");
+    } else rpm->os = rdfXmlStrdup("linux");
 
     rdfGetValue(desc, "Distribution", rpmNs, &value, NULL);
     if (value != NULL) {
@@ -266,7 +273,7 @@ rpmDataPtr rpmOpenRdfFile(char *file) {
     if (value != NULL) {
         rpm->vendor = stringAdd(value);
 	xmlFree(value);
-    } else rpm->vendor = xmlStrdup(localizedStrings[LANG_UNKNOWN]);
+    } else rpm->vendor = rdfXmlStrdup(localizedStrings[LANG_UNKNOWN]);
 
     rdfGetValue(desc, "Packager", rpmNs, &value, NULL);
     if (value != NULL) rpm->extra->packager = value;
@@ -276,15 +283,15 @@ rpmDataPtr rpmOpenRdfFile(char *file) {
     if (value != NULL) {
         rpm->group = stringAdd(value);
 	xmlFree(value);
-    } else rpm->group = xmlStrdup(localizedStrings[LANG_NO_GROUP]);
+    } else rpm->group = rdfXmlStrdup(localizedStrings[LANG_NO_GROUP]);
     
     rdfGetValue(desc, "Summary", rpmNs, &value, NULL);
     if (value != NULL) rpm->summary = value;
-    else rpm->summary = xmlStrdup(localizedStrings[LANG_NO_SUMMARY]);
+    else rpm->summary = rdfXmlStrdup(localizedStrings[LANG_NO_SUMMARY]);
 
     rdfGetValue(desc, "Description", rpmNs, &value, NULL);
     if (value != NULL) rpm->extra->description = value;
-    else rpm->extra->description = xmlStrdup(localizedStrings[LANG_NO_DESCRIPTION]);
+    else rpm->extra->description = rdfXmlStrdup(localizedStrings[LANG_NO_DESCRIPTION]);
 
     rdfGetValue(desc, "Copyright", rpmNs, &value, NULL);
     if (value != NULL) rpm->extra->copyright = value;
@@ -297,7 +304,7 @@ rpmDataPtr rpmOpenRdfFile(char *file) {
     rdfGetValue(desc, "Sources", rpmNs, &value, NULL);
     if (value != NULL) {
         rpm->extra->srcrpm = value;
-    } else rpm->extra->srcrpm = xmlStrdup("");
+    } else rpm->extra->srcrpm = rdfXmlStrdup("");
 
     rdfGetValue(desc, "Size", rpmNs, &value, NULL);
     if (value != NULL) {
@@ -317,7 +324,7 @@ rpmDataPtr rpmOpenRdfFile(char *file) {
 
     rdfGetValue(desc, "BuildHost", rpmNs, &value, NULL);
     if (value != NULL) rpm->extra->host = value;
-    else rpm->extra->host = xmlStrdup(localizedStrings[LANG_NO_HOST]);
+    else rpm->extra->host = rdfXmlStrdup(localizedStrings[LANG_NO_HOST]);
 
     rdfGetValue(desc, "Files", rpmNs, &value, NULL);
     if (value != NULL) rpm->extra->filelist = value;
@@ -456,12 +463,12 @@ rpmDataPtr rpmOpenRdfFile(char *file) {
 
 	while ((filename > value) && (*filename != '/'))
 	    filename --;
-	rpm->filename = xmlStrdup(filename);
+	rpm->filename = rdfXmlStrdup(filename);
 	xmlFree(value);
     } else {
 	snprintf(nameBuffer, 200, "%s-%s-%s.%s.rpm",
 		 rpm->name, rpm->version, rpm->release, rpm->arch);
-	rpm->filename = xmlStrdup(nameBuffer);
+	rpm->filename = rdfXmlStrdup(nameBuffer);
     }
 
 
