@@ -26,6 +26,8 @@
 #include <rpm/rpmmacro.h>
 #include <rpm/rpmdb.h>
 #include <rpm/rpmts.h>
+#include <rpm/rpmtd.h>
+#include <stdint.h>
 #ifdef HAVE_RPM42
 #include <rpm/rpmfi.h>
 #endif
@@ -56,18 +58,60 @@ int rpmReadSignature(FD_t fd, /*@out@*/ Header *header, short sig_type);
 #include "sql.h"
 #endif
 
-#ifdef USE_RPMIO
-#ifndef rpmdbNextIterator
-typedef struct headerTagTableEntry_s *headerTagTableEntryPtr;
-#else
-typedef struct headerTagTableEntry *headerTagTableEntryPtr;
-#endif
-#else
-typedef struct headerTagTableEntry *headerTagTableEntryPtr;
-#endif
 #ifndef HAVE_SNPRINTF
 #error You really need snprintf ...
 #endif
+
+/*
+ * The pre-rpmtd headerGetEntry() API returned a borrowed scalar pointer,
+ * but a free()-able char ** for string arrays. Preserve that contract here.
+ * Values remain valid until Header is released. Only pointer arrays are
+ * allocated; individual string elements belong to librpm.
+ */
+static int
+rpm2htmlHeaderGetEntry(Header h, rpmTagVal tag, int *type,
+                       void **data, int *count)
+{
+    struct rpmtd_s td = {0};
+    int i;
+
+    *data = NULL;
+    *type = RPM_NULL_TYPE;
+    *count = 0;
+    if (tag == RPMTAG_SUMMARY || tag == RPMTAG_DESCRIPTION ||
+        tag == RPMTAG_GROUP) {
+        const char *value = headerGetString(h, tag);
+        if (value == NULL)
+            return 0;
+        *type = RPM_STRING_TYPE;
+        *data = (void *)value;
+        *count = 1;
+        return 1;
+    }
+    if (!headerGet(h, tag, &td, HEADERGET_MINMEM | HEADERGET_RAW))
+        return 0;
+    *type = td.type;
+    *count = td.count;
+    if (td.type == RPM_STRING_ARRAY_TYPE || td.type == RPM_I18NSTRING_TYPE) {
+        char **values = calloc(td.count + 1, sizeof(*values));
+        if (values == NULL) {
+            rpmtdFreeData(&td);
+            return 0;
+        }
+        for (i = 0; i < td.count; i++) {
+            rpmtdSetIndex(&td, i);
+            values[i] = (char *)rpmtdGetString(&td);
+        }
+        *data = values;
+    } else {
+        /* HEADERGET_MINMEM borrows header storage, no scalar allocation. */
+        *data = td.data;
+    }
+    rpmtdFreeData(&td);
+    return 1;
+}
+
+#define headerGetEntry rpm2htmlHeaderGetEntry
 
 /*
  * Get the internal number associated with an RPM tag.
@@ -388,7 +432,7 @@ rpmAnalyze(char *path, char *nameRpm, const char *sigtarget,
 {
     int installed = dir->installbase;
     char *name = NULL, *version = NULL, *release = NULL;
-    int_32 count, type;
+    int count, type;
     void *p = NULL;
     int val, i, j;
     rpmDataPtr rpm = NULL;
@@ -622,14 +666,14 @@ rpmAnalyze(char *path, char *nameRpm, const char *sigtarget,
             || !p) {
             rpm->date = 0;
         } else {
-            rpm->date = *((int_32 *) p);
+            rpm->date = *((int32_t *) p);
         }
         ENTRY_CLEANUP(p);
     } else {
         if (!headerGetEntry(h, RPMTAG_BUILDTIME, &type, &p, &count) || !p) {
             rpm->date = 0;
         } else {
-            rpm->date = *((int_32 *) p);
+            rpm->date = *((int32_t *) p);
         }
         ENTRY_CLEANUP(p);
     }
@@ -665,7 +709,7 @@ rpmAnalyze(char *path, char *nameRpm, const char *sigtarget,
     if (!headerGetEntry(h, RPMTAG_CHANGELOGTEXT, &type, &p, &count) || !p) {
         rpm->extra->changelog = NULL;
     } else {
-        int_32 *dates;	/* necessary when sizeof(time_t) != sizeof(int_32) */
+        int32_t *dates;	/* necessary when sizeof(time_t) != sizeof(int32_t) */
         time_t date;
         char **names;
         char **holdp = (char **) p;
@@ -831,7 +875,7 @@ rpmAnalyze(char *path, char *nameRpm, const char *sigtarget,
         rpm->extra->nb_requires = 0;
         rpm->extra->requires = NULL;
     } else {
-        int_32 count2,
+        int count2,
           count3,
           type2,
           type3;
@@ -856,7 +900,7 @@ rpmAnalyze(char *path, char *nameRpm, const char *sigtarget,
         rpm->extra->nb_requires = 0;
 
         for (i = 0, j = 0; (i < count2) && (i < count3); i++) {
-            long anint = *(((long *) r) + i);
+            uint32_t anint = ((uint32_t *) r)[i];
             rpm_dep_flag flag = RPM2HTML_REQ_NONE;
 
             if ((anint & RPMSENSE_LESS) && (anint & RPMSENSE_EQUAL))

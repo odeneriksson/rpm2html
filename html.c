@@ -22,7 +22,8 @@
 #include <errno.h>
 #include <ctype.h>
 
-#include <rpmlib.h>
+#include <rpm/rpmlib.h>
+#include <rpm/rpmtag.h>
 
 #include "rpm2html.h"
 #include "rpmdata.h"

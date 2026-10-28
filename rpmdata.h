@@ -10,13 +10,8 @@
 #define __RPMDATA_H__
 
 #include <sys/types.h>
-#if defined(HAVE_RPM_RPMLEGACY_H)
-#define _RPM_4_4_COMPAT
-#include <rpm/rpmlegacy.h>
-#endif
-#if defined(HAVE_RPM_RPMIO_H)
+#include <stdint.h>
 #include <rpm/rpmio.h>
-#endif
 #include <rpm/header.h>
 
 /*
@@ -127,7 +122,7 @@ typedef struct rpm_data {
     const char *distribution;	/* general OS distribution */
     const char *vendor;		/* general OS vendor */
     time_t date;		/* date of packaging */
-    int_32 size;		/* size of the software */
+    int32_t size;		/* size of the software */
     const char *subdir;		/* subdirectory holding the rpm */
 
     struct rpm_extra_data *extra;/* see below */

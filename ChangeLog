@@ -1,5 +1,21 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rpmdata.h: Remove the RPM 4 rpmlegacy.h compatibility include
+	  and use standard int32_t for stored RPM size metadata.
+	* rpmopen.c: Introduce an rpmtd-based compatibility helper for
+	  removed headerGetEntry() calls. Preserve the existing convention
+	  of borrowed scalar values and allocated string-pointer arrays.
+	* rpmopen.c: Replace obsolete int_32 metadata declarations with
+	  standard integer types for counts, timestamps and tag data.
+	* rpmopen.c: Read dependency flags as uint32_t elements instead
+	  of assuming an RPM 32-bit array can be accessed through long *;
+	  fix the associated 64-bit layout error.
+	* rpmopen.c: Remove unused pre-RPM-4 tag-table typedefs.
+	* html.c: Include RPM headers using current rpm/ paths and include
+	  rpmtag.h for tag definitions.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* configure.in, configure.ac: Replace the obsolete Autoconf setup
 	  with a modern configure.ac using Autoconf 2.69 and Automake's
 	  foreign mode. Keep the upstream version at 1.11.2.
