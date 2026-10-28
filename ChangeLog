@@ -1,5 +1,16 @@
 2026-10-28  Oden Eriksson <5888236+odeneriksson@users.noreply.github.com>
 
+	* html.c (htmlFileName): Return an empty filename if the supplied
+	buffer is too small to hold the HTML suffix.  Avoid producing a
+	truncated suffix and silence the GCC format-truncation diagnostic.
+	(dumpRessHtml): Allocate the complete output path according to its
+	formatted length rather than truncating it in the shared 500-byte
+	buffer.  Handle formatting and allocation failures, free the
+	temporary path after opening the resource page, and preserve the
+	existing output for ordinary paths.
+
+2026-10-28  Oden Eriksson <5888236+odeneriksson@users.noreply.github.com>
+
 	* rpmdata.c (rpmAddRealFile): Reject RPM file paths which do not
 	fit into the fixed-size path buffer.  Replace strncpy with a
 	length-checked memcpy including the terminating NUL byte to

@@ -961,7 +961,8 @@ static void htmlFileName(char *filename, size_t size, const char *name) {
     size_t suffix_len = strlen(suffix);
 
     if (suffix_len >= size) {
-        snprintf(filename, size, "%s", suffix);
+        if (size > 0)
+            filename[0] = '\0';
         return;
     }
 
@@ -2622,6 +2623,9 @@ void dumpRessHtml(rpmRessPtr ress, int installed) {
     rpmDataPtr rpm;
     FILE *html;
     int i;
+    int path_len;
+    char *path;
+    const char *resource_file;
     const char *name = NULL;
 
     if (!rpm2html_dump_html) return;
@@ -2640,23 +2644,36 @@ void dumpRessHtml(rpmRessPtr ress, int installed) {
 
     rpmRessSort(ress);
 
-    snprintf(buf, sizeof(buf), "%s/%s", rpm2html_dir,
-           resourceName(ress->name));
-    /*
-     * !!!!!
-     * if (checkDate(buf, ress->stamp)) return;
-     */
-    if (rpm2htmlVerbose > 1) {
-    printf("Dumping %s/%s\n", rpm2html_dir,
-           resourceName(ress->name));
-    }
-
-    html = fopen(buf, "w");
-    if (html == NULL) {
-        fprintf(stderr, "Couldn't save to file %s: %s\n",
-	        buf, strerror(errno));
+    resource_file = resourceName(ress->name);
+    path_len = snprintf(NULL, 0, "%s/%s", rpm2html_dir, resource_file);
+    if (path_len < 0) {
+        fprintf(stderr, "Couldn't format resource page path for %s\n",
+                ress->name);
         return;
     }
+    path = malloc((size_t)path_len + 1);
+    if (path == NULL) {
+        fprintf(stderr, "Couldn't allocate resource page path for %s\n",
+                ress->name);
+        return;
+    }
+    snprintf(path, (size_t)path_len + 1, "%s/%s", rpm2html_dir,
+             resource_file);
+    /*
+     * !!!!!
+     * if (checkDate(path, ress->stamp)) { free(path); return; }
+     */
+    if (rpm2htmlVerbose > 1)
+        printf("Dumping %s\n", path);
+
+    html = fopen(path, "w");
+    if (html == NULL) {
+        fprintf(stderr, "Couldn't save to file %s: %s\n",
+                path, strerror(errno));
+        free(path);
+        return;
+    }
+    free(path);
 
 #ifdef HAVE_LIBTEMPLATE
     tpl_element_set(engine, "name", ress->name);
