@@ -371,7 +371,18 @@ void destroyTemplateEngine() {
  */
 
 static char *buffer = NULL;
-static int buffer_size = 2000;
+static size_t buffer_size = 2000;
+
+/* Check for size_t overflow before growing the shared HTML/XML buffer. */
+static size_t
+nextHTMLBufferSize(size_t current)
+{
+    if (current > SIZE_MAX / 2) {
+        fputs("convertHTML/convertXML: output buffer size overflow\n", stderr);
+        exit(1);
+    }
+    return current * 2;
+}
 char *convertHTML(const char *str) {
 
     char *cur, *end;
@@ -389,9 +400,9 @@ char *convertHTML(const char *str) {
 
     while (*str != '\0') {
         if (cur >= end) {
-	    int delta = cur - buffer;
+	    size_t delta = (size_t) (cur - buffer);
 
-	    buffer_size *= 2;
+	    buffer_size = nextHTMLBufferSize(buffer_size);
 	    buffer = (char *) xmlRealloc(buffer, buffer_size * sizeof(char));
 	    if (buffer == NULL) {
 		perror("xmlRealloc failed");
@@ -434,9 +445,9 @@ char *convertXML(const char *str) {
 
     while (*str != '\0') {
         if (cur >= end) {
-	    int delta = cur - buffer;
+	    size_t delta = (size_t) (cur - buffer);
 
-	    buffer_size *= 2;
+	    buffer_size = nextHTMLBufferSize(buffer_size);
 	    buffer = (char *) xmlRealloc(buffer, buffer_size * sizeof(char));
 	    if (buffer == NULL) {
 		perror("xmlRealloc failed");

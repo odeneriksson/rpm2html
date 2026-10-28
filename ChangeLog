@@ -1,5 +1,14 @@
 2026-10-28  OpenAI ChatGPT
 
+	* html.c (buffer_size): Store the shared HTML/XML output buffer
+	capacity as size_t rather than int.
+	(nextHTMLBufferSize): New helper to check for size_t overflow
+	before doubling the shared output buffer.
+	(convertHTML, convertXML): Use checked buffer growth and size_t
+	offsets while retaining libxml2 allocation and output semantics.
+
+2026-10-28  OpenAI ChatGPT
+
 	* html.c (addCVELength): Add checked size_t length calculation for
 	variable-length CVE links.
 	(convertCVE): Recognize CVE sequence numbers longer than four
