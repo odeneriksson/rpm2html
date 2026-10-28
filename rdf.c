@@ -12,6 +12,7 @@
 #include <fcntl.h>
 #endif
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #ifdef HAVE_UNISTD_H
@@ -741,7 +742,8 @@ void dumpResRdf(rpmRessPtr res) {
     char *base;
     int i;
     char buf[10000];
-    char file[1000];
+    char *file;
+    size_t base_len, name_len, file_size, j;
     char *buffer;
     int size;
     int stat_res;
@@ -759,23 +761,35 @@ void dumpResRdf(rpmRessPtr res) {
 
     if (res->nb_provider == 0) return;
 
-    if (res->name[0] != '/')
-        snprintf(file, sizeof(file), "%s/%s.rdf", base, res->name);
-    else {
-        // replace all '/' with '_' to avoid "couldn't open <base>//usr/bin/mailq.rdf for writing !"
+    /* Preserve the complete resource name and the ".rdf" suffix. */
+    base_len = strlen(base);
+    name_len = strlen(res->name);
+    if (base_len > SIZE_MAX - 6 || name_len > SIZE_MAX - base_len - 6) {
+        fprintf(stderr, "RDF resource path is too long\n");
+        return;
+    }
+    file_size = base_len + name_len + 6; /* slash, ".rdf", NUL */
+    file = xmlMalloc(file_size);
+    if (file == NULL) {
+        fprintf(stderr, " : running out of memory\n");
+        return;
+    }
+    memcpy(file, base, base_len);
+    file[base_len] = '/';
+    memcpy(file + base_len + 1, res->name, name_len);
+    memcpy(file + base_len + 1 + name_len, ".rdf", sizeof(".rdf"));
 
-        snprintf(buf, sizeof(buf), "%s", res->name);
-        // we reuse 'buffer' as cursor here
-        buffer = &buf[0];
-        while (*buffer != '\0') {
-            if (*buffer == '/')
-                *buffer = '_';
-            buffer++;
+    if (res->name[0] == '/') {
+        /* Preserve the original conversion of leading-slash resources. */
+        for (j = 0; j < name_len; j++) {
+            if (file[base_len + 1 + j] == '/')
+                file[base_len + 1 + j] = '_';
         }
-        snprintf(file, sizeof(file), "%s/%s.rdf", base, buf);
-
-        if (rpm2htmlVerbose > 1)
-            fprintf(stdout, "warning: '/' in resource name converted into '_': %s\n", buf);
+        if (rpm2htmlVerbose > 1) {
+            fputs("warning: '/' in resource name converted into '_': ", stdout);
+            fwrite(file + base_len + 1, 1, name_len, stdout);
+            fputc('\n', stdout);
+        }
     }
 
     /*
@@ -864,7 +878,10 @@ void dumpResRdf(rpmRessPtr res) {
      */
     rdfWriteMemory(rdf, &buffer, &size);
     rdfDestroySchema(rdf);
-    if (buffer == NULL) return;
+    if (buffer == NULL) {
+        xmlFree(file);
+        return;
+    }
 
     /*
      * if the file already exists avoid to overwrite it if the content
@@ -878,6 +895,7 @@ void dumpResRdf(rpmRessPtr res) {
         if (buffer2 == NULL) {
 	    fprintf(stderr, " : running out of memory\n");
 	    xmlFree(buffer);
+	    xmlFree(file);
 	    return;
 	}
 	output = fopen(file, "r");
@@ -885,6 +903,7 @@ void dumpResRdf(rpmRessPtr res) {
 	    fprintf(stderr, "couldn't open %s for reading !\n", file);
 	    xmlFree(buffer);
 	    xmlFree(buffer2);
+	    xmlFree(file);
 	    return;
 	}
 	if (fread(buffer2, size, 1, output) != 1) {
@@ -900,6 +919,7 @@ void dumpResRdf(rpmRessPtr res) {
 	    xmlFree(buffer);
 	    if (rpm2htmlVerbose > 1)
 		fprintf(stderr, "File %s : Content identical !\n", file);
+	    xmlFree(file);
 	    return;
 	}
 	xmlFree(buffer2);
@@ -915,6 +935,7 @@ void dumpResRdf(rpmRessPtr res) {
     if (output == NULL) {
         fprintf(stderr, "couldn't open %s for writing !\n", file);
 	xmlFree(buffer);
+	xmlFree(file);
 	return;
     }
     if (fwrite(buffer, size, 1, output) != 1) {
@@ -923,6 +944,7 @@ void dumpResRdf(rpmRessPtr res) {
     }
     fclose(output);
     xmlFree(buffer);
+    xmlFree(file);
 }
 
 /*

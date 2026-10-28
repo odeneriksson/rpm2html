@@ -1,3 +1,12 @@
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
+	* rdf.c (dumpResRdf): Allocate enough space for the complete RDF
+	resource filename and its suffix rather than formatting it into a
+	fixed-size buffer.  Preserve the historical slash-to-underscore
+	conversion for resources with leading slashes and the verbose
+	message.  Reject overflowing allocation sizes and free the path
+	on every return.  Avoid the GCC -Wformat-truncation diagnostic.
+
 2026-10-28  Oden Eriksson <5888236+odeneriksson@users.noreply.github.com>
 
 	* cleanup.c (rpmDirCleanupAll): Pass the complete RDF file path to
