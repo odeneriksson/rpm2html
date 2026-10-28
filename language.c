@@ -222,7 +222,7 @@ int readLanguageFile(char *filename)
 		 * the last paragraph correspond to the new localized
 		 * string. Replace the old one and reset the buffer.
 		 */
-		localizedStrings[currentString] = xmlStrdup(buffer);
+		localizedStrings[currentString] = (char *) xmlStrdup(BAD_CAST buffer);
 		currentString++;
 		buffer[0] = '\0';
 	    }

@@ -1,5 +1,12 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* language.c (readLanguageFile): Explicitly convert the input to
+	libxml2's xmlChar type and the duplicated result back to the
+	existing char * translation table.  Keep string contents and
+	allocation ownership unchanged.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* stringbuf.c (stringAdd): Explicitly convert between the module's
 	const char * interface and libxml2's xmlChar * interface when
 	duplicating strings, in both buffered and unbuffered builds.
