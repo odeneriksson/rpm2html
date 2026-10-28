@@ -1,0 +1,177 @@
+;
+; Automatically generated rpm2html 0.70 language file
+;
+.html
+
+Erzeugt von
+
+index.html
+
+Groups.html
+
+ByDate.html
+
+ByName.html
+
+Vendors.html
+
+Distribs.html
+
+Willkommen beim RPM-Archiv bei
+
+<p>
+<strong>rpm2html</strong> erzeugt automatisch Web-Seiten, die einen Satz
+von<a href="http://www.rpm.org/">RPM</a>-Paketen beschreiben.</p>
+<p>
+Der Zweck von rpm2html ist es auch, die Abhängigkeiten zwischen
+verschiedenen Paketen herauszufinden und anzuzeigen, welches Paket bzw.
+welche Pakete notwendig sind, im ein bestimmtes Paket zu installieren.
+Jedes Paket wird analysiert, um seine Abhängigkeiten herauszufinden und
+auch die Fähigkeiten, die es zu Verfügung stellt.  Diese Beziehungen
+werden mit Hilfe von Hyperlinks in den erzeugten Seiten dargestellt.
+Das richtige Paket herauszufinden ist deshalb nur eine Sache von ein
+paar "Klicks"!</p>
+<p>
+Eine ausgesprochene Annehmlichkeit besteht in der Möglichkeit, all diese
+Seiten zu indizieren; so ist es dem Benutzer möglich, sofort das oder
+die Pakete mit der gewünschten Funktionalität zu finden (jedenfalls
+dann, wenn der Paket-Maintainer das RPM in geeigneter Weise beschrieben
+hat.</p>
+
+
+Dies Archiv beherbert %d RPMs, zusammen %d MBytes an Daten
+
+Auf dieser Maschine sind %d RPMs installiert, zusammen %d MBytes an Daten
+
+Die Liste von
+
+RPM mit Index nach Kategorien
+
+RPM mit Index nach Datum der Herstellung
+
+RPM mit Index nach Namen
+
+RPM mit Index nach Maintainer
+
+RPM mit Index nach Distribution
+
+RPM mit Index nach Datum der Installation
+
+Archiv für Quellen
+
+Lokaler »Mirror«
+
+»Mirrors«
+
+Erzeugung hat gedauert
+
+Sekunden
+
+Willkommen bei der RPM Beschreibung von
+
+Von
+
+Name
+
+Distribution
+
+Version
+
+Vendor
+
+Release
+
+Build Datum
+
+Install date
+
+Group
+
+Build host
+
+Size
+
+Source RPM
+
+Packager
+
+Url
+
+Summary
+
+Provides
+
+Requires
+
+Copyright
+
+Dateien
+
+Keine Dateiliste im Paket !
+
+Keine Kurzbeschreibung !
+
+RPM resource
+
+Zur Verfügung gestellt von
+
+RPM sortiert nach Group
+
+RPM von Group
+
+RPM sortiert nach Distribution
+
+RPM von Distribution
+
+RPM sortiert nach Vendor
+
+RPM ausgeliefert von
+
+RPM sortiert nach Herstellungsdatum
+
+RPM sortiert nach Installationsdatum
+
+RPMs weniger als 3 Tage alt
+
+RPMs weniger als 1 Woche alt
+
+RPMs weniger als less 2 Wochen alt
+
+RPMs weniger als 1 Monat alt
+
+RPMs mehr als 1 Monat alt
+
+RPMs installiert vor weniger als 3 Tagen
+
+RPMs installiert vor weniger als 1 Woche
+
+RPMs installiert vor weniger als 2 Wochen
+
+RPMs installiert vor weniger als 1 Monat
+
+RPMs installiert vor mehr als 1 Monat
+
+RPM sortiert nach Name
+
+Keine Beschreibung !
+
+Unbekannt
+
+Kein
+
+unbekannt/group
+
+unbekannt.host
+
+Index
+
+Pakete beginnen mit dem Buchstaben
+
+Warnung: Dies Paket stellt keine gültige »resources« Listen zur Verfügung
+
+Versuch, ein anderes zu wählen
+
+Mehr
+
+Changelog
+

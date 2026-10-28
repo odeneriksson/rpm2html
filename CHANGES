@@ -1,0 +1,208 @@
+Tue May  8 16:47:35 CEST 2001 Daniel Veillard <veillard@redhat.com>
+	* all: Moved to sources.redhat.com
+
+1.2.2
+=====
+  * add the multi-rpm base support.
+
+1.2.1
+=====
+  * correct the nasty solaris quick sort bug...
+
+1.0:
+====
+  * serious memory usage debugging.
+  * speedup code, hash table for resources.
+  * reduced a lot memory consumption by separating extra RPM data.
+  * added the mirrors.html link to the links headers.
+  * updated to the latest XML code, memory leak proofed.
+  * improved the indexes page output.
+
+0.99:
+=====
+  * parse SuSE sources RPMs with .spm suffixes
+  * changed the output for source RPMs
+  * exit if config file is corrupted
+  * cleanup of the RDF tree output (new module cleanup.c).
+
+0.98:
+=====
+  * Rpm2html now dumps mirror informations from the config file too to
+    allow the rpmfind clients to get distribution informations and
+    mirrors lists.
+  * Upgraded the XML/RDF encoding libraries, the old RDF encoding
+    compatibility flag should be removed in the next release.
+
+0.97:
+=====
+  * Applied autoconf/makefiles patches from Karl Eichwalder <ke@suse.de>
+  * Added the generation of the RDF "apropos" description
+
+0.96:
+=====
+  * Cleaned up the make, now libxml builds in the local tree, and it's
+    possible to build outside of source tree.
+
+0.95:
+=====
+  * separated rpmfind from rpm2html, it's now standalone
+
+0.94:
+=====
+ * Mainly working on the rpmfind stuff, integrated with libWWW which
+   already improves performances a lot even if it does only one request
+   at a time
+ * rpmfind now allow querying for a specific version of a package
+   like "rpmfind gcc-2.7.2-3".
+ * rpm2html is now available from the W3C public CVS tree
+
+0.93:
+=====
+ * Enhancement to rpmfind, distribution detection, 
+ * Fixed the binary RPM
+ * rpm2html now show new packages with a "new" icon.
+ * Moved to the W3C Copyright (BSD like) since I'm using W3C resources.
+
+0.92:
+=====
+ * First shipping of rpmfind, unfortunately it wasn't included in the
+   binary RPM :-\
+
+0.91:
+=====
+ * Intermediate bug-fix release
+
+0.90:
+=====
+ * Makefile.in (dir.gif.h): Call compressor with path.
+
+ * Started adding RDF parser and generation, modification of
+   HTML entities encoding, since XML will have a different one.
+   Bug fixes.
+
+ * Removal of main static buffer size problems.
+
+ * Work on an RDF api
+
+0.85:
+=====
+ * corrected a bug in the FTP URL for subtrees
+
+ * started adding code to dump the real tree
+
+ * got rid of scandir() and isblank() for portability
+
+0.80:
+=====
+ * added a count to Group, Distribs and Packagers lists
+
+ * Added msg.de and change the installation process, install the
+   config file in @sysconfdir@ and msg.* in @datadir@ thanks to
+   Karl Eichwalder <ke@suse.de>
+ 
+ * Added Map of the site, and dump of information per directory.
+   Involved a lot of changes internally.
+ 
+ * Use subdir command rather than dir for per-distribution HTML
+   subtrees.
+
+ * Changed the sort algorithm, was too slow for big archives.
+
+0.70:
+=====
+ * Memory debugging through Insure++, removed a few nasty things.
+
+ * Changes to support Caldera packages.
+
+ * Warns in case of lack of resource lists.
+
+ * Extended the language files.
+
+ * Added extra header configuration.
+
+ * Added patches from Gary Thomas (Changelog, zlib, typos).
+
+0.60:
+=====
+ * ByDate is now completely splitted in reasonably sized chunks with
+   next pointers.
+ 
+ * ByName is now splitted into N separate files depending on the
+   package first letter.
+
+0.50:
+=====
+ * Added a fixed size limit to ByDate.html ... People are interested
+   in fresh RPMs, not in a 800Kb HTML page !
+   MAX_PAGE_LENGHT in rpm2html.h for # of packages.
+
+ * Added a -force flag to force the output of HTML pages, bypassing
+   the file timestamp checking.
+
+ * Added recursion in directories. The HTML follow the directory
+   tree and is built on the fly.
+
+ * Corrected serious errors in the HTML output.
+
+ * Added a Spanish setup file, thanks to iolalla <iolalla@unav.es>.
+   Check http://keynes.cti.unav.es/eurielec/ too.
+
+0.40:
+=====
+ * Multiple architecture support has been added.
+
+ * Inserted table breaks in big lists of packages, this
+   slighly breaks the nice alignment but helps the browser
+   rendering a lot !
+
+ * Handle the file modification time to avoid rewriting all
+   the files at each run, if not needed. This was breaking
+   HTTP caching based on file timestamps!
+
+ * Handle more than 2 Gig of RPM data.
+
+ * Correct HTML output to be HTML 4.0 compliant.
+
+0.30:
+=====
+ * Corrected bugs concerning generated links for Vendor
+   and Distribution.
+
+ * Added an header for navigation.
+
+ * Corrected a small bug concerning the color front-end packing
+
+0.25:
+=====
+ * Applied patches from Elliot Lee.
+
+ * IMPORTANT:
+     - the "url" field in the config file now
+       indicate the URL (absolute or relative) to the
+       set of generated HTML files, not the rpm2html
+       Home page anymore !
+     - The mirrors for a directory are now indicated using
+       the "mirror" keyword !
+     - Also there is no more way to change the rpm2html
+       URI from the config file, one need to recompile.
+ 
+ * Added PRINCIPLES and CHANGES
+
+ * General cleanup of the configuration file handling.
+
+ * Support for differents architectures (via directories).
+
+0.2:
+====
+ * A better page colorization rendering
+
+ * Added the support for localization
+
+ * Added support to dump the actual installed
+   RPM base on the local machine.
+
+0.1:
+====
+ * First release
+
+$Id: CHANGES,v 1.41 2001/05/08 14:48:21 veillard Exp $

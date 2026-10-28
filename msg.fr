@@ -1,0 +1,183 @@
+;
+; Automatically generated rpm2html 0.1 language file
+;
+.html
+
+Généré par
+
+index.html
+
+Groups.html
+
+ByDate.html
+
+ByName.html
+
+Vendors.html
+
+Distribs.html
+
+Bienvenue sur le repertoire RPM de
+
+<p>
+<strong>rpm2html</strong> génère automatiquement des pages HTML qui décrivent
+un ensemble de paquetages <a href="http://www.rpm.org/">RPM</a>.</p>
+<p>
+Le but de rpm2html est aussi d'identifier les dépendances entre divers
+paquetages, et fournit ainsi le moyen de trouver les paquetages fournissant les
+ressources necessaire a l'installation d'un autre paquetage. Chaque paquetage
+est analysé pour en extraire les dépendances et les ressources qu'il
+offre. Ces relations sont matérialisées a l'aide de liens hypertextes.
+Il est alors possible de trouver le paquetage fournissant la ressource dont
+vous avez besoin juste a l'aide de quelques click!</p>
+<p>
+L'utilité de ces pages peut etre grandement améliorée par un indexage,
+il est alors possible de trouver instantanément les paquetages qui fournissent
+une fonctionnalité cherchée (du moins tant que le mainteneur du paquetage
+l'a commenté correctement).</p>
+<p>
+Des instructions pour <a href="http://rpmfind.net/linux/rpm2html/mirror.html">
+construire votre mirroir</a> de ce site sont disponibles.</p>
+
+Cette archive héberge %d RPMs pour un total de %d MOctets de données
+
+%d RPM sont actuellement installés sur cette machine pour un total de %d MOctets
+
+La liste des
+
+RPM indexés par categorie
+
+RPM indexés par date de création
+
+RPM indexés par nom
+
+RPM indexés par mainteneur
+
+RPM indexés par distribution
+
+RPM indexés par date d'installation
+
+Répertoire des sources
+
+Mirroir local
+
+Mirroirs
+
+La génération a pris
+
+secondes
+
+Bienvenue sur description RPM de
+
+De
+
+Nom
+
+Distribution
+
+Version
+
+Vendeur
+
+Release
+
+Date de construction
+
+Date d'installation
+
+Groupe
+
+Site de construction
+
+Taille
+
+RPM des sources
+
+Mainteneur
+
+Url
+
+Description
+
+Fournit
+
+Nécessite
+
+Copyright
+
+Fichiers
+
+Pas de fichiers dans le paquetage !
+
+Pas de description !
+
+Ressource RPM
+
+Fournie par
+
+Index par groupe
+
+RPMs du groupe
+
+Index par distribution
+
+RPMs de la distribution
+
+Index par vendeur
+
+RPMs fournis par
+
+Index par date de création
+
+Index par date d'installation
+
+RPMs de moins de trois jours
+
+RPMs de moins d'une semaine
+
+RPMs de moins de deux semaines
+
+RPMs de moins d'un mois
+
+RPMs de plus d'un mois
+
+RPMs installés il y a moins de trois jours
+
+RPMs installés il y a moins d'une semaine
+
+RPMs installés il y a moins de deux semaines
+
+RPMs installés il y a moins d'un mois
+
+RPMs installés il y a plus d'un mois
+
+Index par nom
+
+Pas de description !
+
+Inconnu
+
+Néant
+
+groupe/inconnu
+
+site.inconnu
+
+Index
+
+Paquetages commencant par la lettre
+
+Attention : ce paquetage n'exporte pas de listes de ressources
+
+Essayez d'en sélectionner un autre
+
+Suite
+
+Historique
+
+Sous-Repertoires
+
+Tree.html
+
+Parcourez l'arbre resultant
+

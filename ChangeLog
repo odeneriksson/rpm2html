@@ -1,0 +1,421 @@
+Tue Nov  9 23:05:47 CET 2010 Peter Hanecak <hany@hany.sk>
+
+	* configure.in rpm2html.h: release 1.11.2 (development release)
+	* NEWS rpm2html.spec.in: updated
+	* config.c, html.c, rpm2html.config.test, rpm2html-en.config, rpm2html.h,
+	  rpmopen.c: added global option 'dump_html_only_if_rpm_newer'
+	  (off by default)
+
+Tue Oct  5 16:33:05 CEST 2010 Peter Hanecak <hany@hany.sk>
+
+	* INSTALL, SQL_TODO, TODO, cleanup.c, help.html, language.c,
+	  manuel.html, memory.c, mirror.html, mirroring.html, rdf.c, rdf.h,
+	  rdf_api.c, rpm2html.1, rpm2html.tpl, rpmdata.h, rpmopen.c,
+	  rpmopen.py, sql.c, mirrorfind/mirrorfind.c: fixed typo -
+	  s/informations/information (thanks to Michal Čihař
+	  <michal@cihar.com>)
+
+Thu Sep 30 21:37:10 CEST 2010 Peter Hanecak <hany@hany.sk>
+
+	* configure.in rpm2html.h: release 1.11.1 (development release)
+	* NEWS rpm2html.spec.in: updated
+	* rpm2html.spec.in: fixed minor typo
+
+Wed Sep 29 21:58:42 CEST 2010 Peter Hanecak <hany@hany.sk>
+
+	* rpmopen.c: removed double open - should speed things up around 20%
+
+Mon May  3 22:29:19 CEST 2010 Peter Hanecak <hany@hany.sk>
+
+	* INSTALL: added "./autogen.sh" tip
+
+Mon Jan  4 22:23:16 CET 2010 Peter Hanecak <hany@hany.sk>
+
+	* rpm2html.1: fixed typos - patch from Michal Čihař <nijel@debian.org>
+
+Mon Jul  6 21:18:02 CEST 2009 Peter Hanecak <hany@hany.sk>
+
+	* rpm2html.spec.in: run ./autogen.sh before ./configure to properly
+	  deal with various version of autotools we may encounter on various
+	  build machines
+	* rpmopen.c: reenabled support for package signature processing for
+	  RPM prior to 4.6
+
+Tue Apr 28 22:28:17 CEST 2009 Peter Hanecak <hany@hany.sk>
+
+	* configure.in rpm2html.h: release 1.11.0 (development release)
+	* NEWS rpm2html.spec.in: updated
+	* config.h.in configure.in rpmdata.h rpmopen.c: preliminary support
+	  for compilation against RPM.org's rpm 4.6 using rpmlegacy.h
+
+Tue Apr 28 20:42:32 CEST 2009 Peter Hanecak <hany@hany.sk>
+
+	* configure.in rpm2html.h: release 1.10.0 (stable release)
+	* NEWS rpm2html.spec.in: updated
+
+Thu Dec  4 18:18:43 CET 2008 Peter Hanecak <hany@hany.sk>
+
+	* rpm2html.1: applied patch from Michal Čihař <nijel@debian.org> to
+	  fix escaping in command line options section
+
+Sat Nov 29 21:11:10 CET 2008 Peter Hanecak <hany@hany.sk>
+
+	* configure.in rpm2html.h: release 1.9.7 (development release)
+
+Sun Nov 16 23:16:23 CET 2008 Peter Hanecak <hany@hany.sk>
+
+	* html.c: do not use whole local directory name in page title
+
+Fri Nov 14 00:55:48 CET 2008 Peter Hanecak <hany@hany.sk>
+
+	* rpmopen.c: protect even email addresses from PGP/GPG signatures
+	* rpmdata.c: protect more email addresses in changelog, not just
+	  those enclosed in <>
+	* Makefile.am: fixed usage of configure's --with-gpg parameter
+
+Tue Aug 28 22:54:02 CEST 2007 Peter Hanecak <hany@hany.sk>
+
+	* configure.in rpm2html.h: release 1.9.6 (development release)
+	* NEWS rpm2html.spec.in: updated
+	* rdf.c: fixed error messages like "couldn't open
+	  <RDF base>/usr/share/man/man5/aliases.5.gz.rdf
+	  for writing !"
+	* rpm2html.spec.in: added BuildRequires: automake
+
+Fri Jul 13 00:20:15 CEST 2007 Peter Hanecak <hany@hany.sk>
+
+	* config.c: fixed error when compiling without libtemplate support
+
+Tue May 15 23:56:32 CEST 2007 Peter Hanecak <hany@hany.sk>
+
+	* configure.in rpm2html.h: release 1.9.5 (development release)
+	* NEWS rpm2html.spec.in: updated
+	* ChangeLog: fixed typo
+
+Tue May 15 01:04:43 CEST 2007 Peter Hanecak <hany@hany.sk>
+
+	* html.c: fixed handling of "rdf_count_limit" option introduced in
+	  1.9.2 - option has been so far ignored by mistake
+
+Sat May 12 00:41:37 CEST 2007 Peter Hanecak <hany@hany.sk>
+
+	* html.c: fixed setting of 'next_page' template variable for
+	  'dates_next_page' template item
+
+Sat Apr 14 17:37:49 CEST 2007 Peter Hanecak <hany@hany.sk>
+
+	* configure.in rpm2html.h: release 1.9.4 (development release)
+	* NEWS rpm2html.spec.in: updated
+	* rpm2html.h: updated URL and contact info
+	* config.c, rpmopen.c: fixed some memory leaks
+	* html.c, rdf.c: little more verbose messages
+	* html.c, rpm2html.tpl: fixed segmentation fault occuring when
+	  generating pages describing local configuration with libtemplate
+	  enabled
+
+Mon Apr  2 23:28:37 CEST 2007 Peter Hanecak <hany@hany.sk>
+
+	* html.c: fixed minor typos
+	* rpm2html.spec.in: added missing BuildRequires
+
+Sun Apr  1 14:35:48 CEST 2007 Peter Hanecak <hany@hany.sk>
+
+	* rpm2html.spec.in: do not strip binary
+	* rpm2html.spec.in: properly install translations
+	* rpm2html.spec.in: removed crude autogen.sh hack
+	* rpmopen.c: fixed bug #17152: dependencies on 64-bit packages are
+	  ignored
+	* config.c, html.c, rpm2html-en.config, rpm2html.config.test,
+	  rpm2html.h: added hyperlinking to any CVE-xxxx-yyyy and
+	  CAN-xxxx-yyyy numbers occuring in the changelog - see
+	  'cve_linking' option enabled by default (based on patch from
+	  blacksuninc@users.sourceforge.net)
+	* configure.in rpm2html.h: release 1.9.3 (development release)
+	* NEWS rpm2html.spec.in: updated
+	* rpm2html.spec.in: build using Lazarus libtemplate
+	* rpm2html.spec.in: %%{dist} added to release
+	* rpm2html.spec.in: configs are now noreplace
+	* rpmfind.html, history.html, links.html: removed - too old to
+	  maintain
+	* PROJECT_ABANDONNED, docs.html, download.html, faq.html,
+	  feedback.html, help.html, index.html, license.html,
+	  mirroring.html, mirrors.html, news.html, resync.py, template.html:
+	  documentation clean-up and update of URLs
+	* Makefile.am, config.c, config.h.in, configure.in, html.c,
+	  rpm2html.c, rpm2html.h, rpm2html.tpl: added support for Lazarus
+	  libtemplate
+
+Wed Jun 28 21:39:53 CEST 2006 Peter Hanecak <hany@hany.sk>
+
+	* rpmopen.c: accept '(' and ')' in group - recently quite a lot of
+	  packages contain them so this supresses "Invalid package <package>.rpm :
+	  garbled group" message for such packages
+
+Sun Sep 25 18:33:33 CEST 2005 Peter Hanecak <hanecak@megaloman.sk>
+
+	* configure.in rpm2html.h: release 1.9.2 (development release)
+	* NEWS rpm2html.spec.in: updated
+	* config.c html.c rpm2html-en.config rpm2html.config.test
+	  rpm2html.h: hardcoded RDF export count limit of 20 transformed to
+	  configuration option "rdf_count_limit" (with default value 20)
+	* rpmopen.c: disabled length check for "garbled" warnings
+
+Thu Aug 18 22:23:54 CEST 2005 Peter Hanecak <hanecak@megaloman.sk>
+
+	* configure.in rpm2html.h: release 1.9.1 (development release)
+	* NEWS rpm2html.spec.in: updated
+	* TODO: updated
+	* updated address of FSF
+
+Fri Apr 29 22:52:06 CEST 2005 Peter Hanecak <hanecak@megaloman.sk>
+
+	* html.py, rpm2html.spec.in: updated URLs
+	* html.c, html.py, resync.py, rpm2html-en.config,
+	  rpm2html-rdf.config, rpm2html.config: transformed 'Mirrors' link
+	  to be configurable in configuration file
+	* ChangeLog NEWS: updated
+	* rpmopen.c: checkReleaseName(): release is considered garbled if it
+	  is longer than 65 characters (instead of 20)
+
+Thu Apr 28 19:59:32 CEST 2005 Peter Hanecak <hanecak@megaloman.sk>
+
+	* rpmopen.c: fixed coredumps caused by large changelogs
+
+Tue Apr  5 21:29:54 CEST 2005 Peter Hanecak <hanecak@megaloman.sk>
+
+	* configure.in rpm2html.h: release 1.9.0 (development release)
+	* ChangeLog NEWS rpm2html.spec.in: updated
+	* TODO: updated
+	* Makefile.am: removed 'mkinstalldirs' from 'FILES' so distribution
+	  tarball creation works again
+
+Wed Mar 16 22:04:14 CET 2005 Peter Hanecak <hanecak@megaloman.sk>
+
+	* rpmopen.c: changelog parsing fix
+	* rpmopen.c: empty filelist handling fixed
+	* config.c rpm2html.h rpmdata.c rpmdata.h rpmopen.c: new feature:
+	  e-mail protection (e-mails are mangled in HTML output); turned off
+	  by default
+	* resync.py rpm2html-en.config rpm2html.config
+	  rpm2html.config.mirrors rpm2html.config.test: added
+	  'protectemails=true' option
+	* manuel.html: added info about 'protectemails' option
+	* manuel.html: updated homepage URL
+	* TODO: updated
+
+Tue Mar 15 18:33:54 CET 2005 Peter Hanecak <hanecak@megaloman.sk>
+
+	* TODO: updated
+
+Mon Mar 14 15:04:44 CET 2005 Peter Hanecak <hanecak@megaloman.sk>
+
+	* configure.in rpm2html.h: release 1.8.3
+	* ChangeLog NEWS rpm2html.spec.in: updated
+	* configure.in: fixed bugs affecting usage of 'configure --with-gpg'
+
+Tue Mar  8 15:51:05 CET 2005 Peter Hanecak <hanecak@megaloman.sk>
+
+	* DoInstall DoUpgrade Makefile.am html.c mirroring.html msg.cz
+	  msg.pl: GIFs transformed to PNGs
+	* dir.png french.png mirroring.png new.png: created from GIFs
+	* dir.gif french.gif mirroring.gif new.gif: removed
+	* PROJECT_ABANDONNED: maintenance takeover notice
+
+Tue Dec 16 17:41:59 CET 2003 Fabrice Bellet <fabrice@bellet.info>
+
+	* rpmopen.c: bugs with rpm-4.2 : wrong prototype
+	  of rpmReadSignature(), and fixed the way the filelist 
+	  is built.
+	  
+Fri Sep 26 21:48:47 CEST 2003 Daniel Veillard <daniel@veillard.com>
+
+	* configure.in rpm2html.spec.in: applied patches from 
+	  Peter Hanecak <hanecak@megaloman.com> and released 1.8.2
+
+Tue Apr 29 19:03:16 CEST 2003 Daniel Veillard <daniel@veillard.com>
+
+	* index.html: cleaned up the status
+
+Mon Apr  7 23:07:15 CEST 2003 Daniel Veillard <daniel@veillard.com>
+
+	* search.php: test of CVS
+
+Thu Apr  3 17:09:09 CEST 2003 Daniel Veillard <daniel@veillard.com>
+
+	* search.php: link to the BitTorrent service, improve text.
+
+Wed Feb 12 11:16:08 CET 2003 Fabrice Bellet <fabrice@bellet.info>
+
+	* rpmopen.c: set the transaction flags to perform minimal 
+	  checkings, to solve performance issues with rpm-4.1.
+
+Tue Dec 17 19:50:43 CET 2002 Daniel Veillard <daniel@veillard.com>
+
+	* search.html: set focus to the form first field.
+
+Sat Dec 14 20:39:07 CET 2002 Daniel Veillard <daniel@veillard.com>
+
+	* index.html README: stoping the project.
+
+Tue Dec 10 16:42:10 CET 2002 Daniel Veillard <daniel@veillard.com>
+
+	* rpmopen.c: Hugh I Buchanan found a problem when package
+	  signature can't be verified on new librpm versions.
+
+Sat Nov 16 12:33:01 CET 2002 Daniel Veillard <daniel@veillard.com>
+
+	* everything: released 1.8.0 and then 1.8.1
+	* download: updated the CVS informations to point to the
+	  new CVS
+
+Fri Sep 13 10:49:42 CEST 2002 Daniel Veillard <daniel@veillard.com>
+
+	* search.php: restored the search based on provides name
+
+Wed Mar 27 09:07:02 CET 2002 Daniel Veillard <daniel@veillard.com>
+
+	* mirrors.html: updated the address of the mirror in Hong Kong
+
+Sat Mar 16 09:29:43 CET 2002 Daniel Veillard <daniel@veillard.com>
+
+	* faq.html: the question about the MD5 mismatch is really the
+	  top FAQ nowadays.
+
+Sun Feb 17 00:33:15 CET 2002 Daniel Veillard <daniel@veillard.com>
+
+	* config.py rpmopen.py sql.py html.py: lot of work on the
+	  pythonization, dumps rdf resources, database cleanups...
+
+Thu Feb 14 23:48:53 CET 2002 Daniel Veillard <daniel@veillard.com>
+
+	* config.py: the configuration file parser.
+
+Thu Feb 14 22:22:49 CET 2002 Daniel Veillard <daniel@veillard.com>
+
+	* rpmopen.py: filling up the DB and starting to dump pages
+
+Thu Feb 14 14:20:28 CET 2002 Daniel Veillard <daniel@veillard.com>
+
+	* sql.py rpmopen.py: more work toward Python translation
+
+Wed Feb 13 23:32:21 CET 2002 Daniel Veillard <daniel@veillard.com>
+
+	* sql.py: start migrating at least part of the code to python
+
+Sun Jan 27 22:19:17 CET 2002 Daniel Veillard <daniel@veillard.com>
+
+	* search.php: cleaned up the PHP code and added System and
+	  Arch optional filters.
+
+Sat Jan 26 12:52:37 CET 2002 Daniel Veillard <daniel@veillard.com>
+
+	* searchnvr.php: to use in conjunction with /var/log/rpmpkgs
+	  when trying to salvage a machine whose RPM database content
+	  has been lost
+
+Sun Nov 11 17:00:28 CET 2001 Daniel Veillard <daniel@veillard.com>
+
+	* search.php: improved the query to extract the site URLs
+
+Sat Aug 18 13:50:44 CEST 2001 Daniel Veillard <daniel@veillard.com>
+
+	* Makefile.am configure.in: fixing the Makefiles when compiling
+	  with the database support enabled, this time the mechanism
+	  should be reliable.
+
+Tue Aug 14 12:40:03 CEST 2001 Daniel Veillard <daniel@veillard.com>
+
+	* rpmopen.c: fix to compile with rpm < 4.0.3
+
+Mon Aug 13 10:56:31 CEST 2001 Daniel Veillard <daniel@veillard.com>
+
+	* search.php: try to avoid generating // in URL paths
+
+Sun Jul 29 06:01:48 EDT 2001 Daniel Veillard <daniel@veillard.com>
+
+	* AUTHORS ChangeLog NEWS acconfig.h config.guess config.h.in
+	  config.sub configure.in rpm2html.[hc] rpm2html.spec rpmopen.c:
+	  switched to automake, release now 3 digits, cleanups for
+	  rpm-4.0.3
+
+Tue Jul 24 22:35:55 CEST 2001 Daniel Veillard <daniel@veillard.com>
+
+	* Makefile.in configure.in rpm2html.h: release of version 1.7
+
+Thu Jul 19 21:37:27 CEST 2001 Daniel Veillard <daniel@veillard.com>
+
+	* rdf_api.c: fixed a problem with libxml2
+	* sql.c sqltools.c: fixed an RDF resource generation error
+
+Wed Jul 18 18:48:50 CEST 2001 Daniel Veillard <daniel@veillard.com>
+
+	* Makefile.in configure.in rpm2html.h: release of version 1.6
+	  uses libxml2 by default now
+	* Changelog INSTALL *.html: changed email address
+	* rdf_api.c: cleanup for libxml2
+	* rpm2html.spec: upgraded to use Red Hat's one
+	* rpmopen.c: patch for recent RPMs
+
+Fri Jun 22 18:22:25 CEST 2001 Daniel Veillard <daniel@veillard.com>
+
+	* rpm2html-en.config: fixed the RH 7.1 alpha paths
+
+Fri Jun 22 10:31:44 CEST 2001 Fabrice Bellet <fabrice@gnu.org>
+
+	* search.php: order matching packages according to their
+	  "major.minor.micro.extra" version number.
+
+Tue Jun 19 10:46:43 CEST 2001 Daniel Veillard <daniel@veillard.com>
+
+	* download.html: added a link to the commit logs archives
+
+Mon Jun 18 20:26:21 CEST 2001 Daniel Veillard <daniel@veillard.com>
+
+	* rpm2html-mysql-setup.txt: added a seriously modified version
+	  of the contribution by Michael B. Weiner
+
+Tue Jun 12 13:20:12 CEST 2001 Daniel Veillard <daniel@veillard.com>
+
+	* rpm2html.config: fix to close bug #44237 apache root has changed
+	  to conform the LSB. Also updated the Red Hat ftp URLs
+
+Tue May 22 12:50:09 CEST 2001 Daniel Veillard <daniel@veillard.com>
+
+	* search.php: www.rpmfind.net is speakeasy, FTP should be directed
+	  there.
+
+Tue May 22 12:31:05 CEST 2001 Daniel Veillard <daniel@veillard.com>
+
+	* search.php: changed '-$arch' to '.$arch' in the link name output
+
+Mon May 21 09:05:34 CEST 2001 Daniel Veillard <daniel@veillard.com>
+
+	* config.test rpm2html-en.config rpm2html.config.mirrors: fixed a few
+	  RDF links
+
+Mon May 21 08:59:52 CEST 2001 Daniel Veillard <daniel@veillard.com>
+
+	* mirrors.html: updated UserFriendly Network URL
+
+Thu May 17 12:35:12 PDT 2001 Daniel Veillard <daniel@veillard.com>
+
+	* sql.c: changed reindex to use rpm2html-local.config instead
+	  of rpm2html-en.config
+
+Thu May 17 20:51:30 CEST 2001 Daniel Veillard <daniel@veillard.com>
+
+	* rpm2html-en.config: added speakeasy and fr2 lists of mirrors
+
+Mon May 14 14:16:58 CEST 2001 Daniel Veillard <daniel@veillard.com>
+
+	* rpm2html-en.config: fixed helix -> ximian, new tree for
+	  redhat and powertools
+
+Sun May 13 10:49:27 PDT 2001 Daniel Veillard <daniel@veillard.com>
+
+	* search.php: fixed the display of the mirrors, added queries
+
+Sun May 13 10:27:22 PDT 2001 Daniel Veillard <daniel@veillard.com>
+
+	* sql.c search.php: starting to add a Searches table for mirrors
+	* Changelog: added to follow a good established tradition

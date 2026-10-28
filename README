@@ -1,0 +1,37 @@
+    PROJECT is dead, if someone feels like taking over, contact me,
+I will provide all bits I have.
+
+daniel@veillard.com
+
+                README for rpm2html
+		    Version 0.90
+
+Rpm2html tries to solve 2 big problems one face when
+grabbing a RPM package from a mirror on the net and trying to
+install it:
+
+   - it gives more information than just the filename before
+     installing the package.
+   - it tries to solve the dependancy problem by analyzing all
+     the Provides and Requires of the set of RPMs. It shows the
+     cross references by the way of hypertext links.
+
+The second point will only be efficient if the actual number of
+RPM indexed is important.
+I can see various usages for this software:
+
+   - indexing mirrors sites (e.g. Sunsite, RedHat and their
+     mirrors world wide).
+   - indexing CD-ROM before shipping to provide an easier view
+     of the packages available using the standard tool (an HTML
+     browser).
+   - exporting as a set of HTML pages the current setup of a
+     linux machine, this may prove useful for system administration.
+
+ Check INSTALL for installation instruction.
+ Read BUGS to learn about registered misbehaviours
+
+Daniel
+
+$Id: README,v 1.12 2002/12/14 19:40:19 veillard Exp $
+

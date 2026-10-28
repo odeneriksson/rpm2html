@@ -1,0 +1,185 @@
+.html
+
+Generováno
+
+index.html
+
+Groups.html
+
+ByDate.html
+
+ByName.html
+
+Vendors.html
+
+Distribs.html
+
+Vítejte v archivu RPM balíkù na
+
+<p>
+<strong>rpm2html</strong> automaticky generuje Web stránky popisující databázi
+<a href=http://www.rpm.org/>RPM</a> balíkù.</p>
+<p>
+<img src="new.png" alt="Nové"><a href=http://rpmfind.net/linux/rpm2html/rpmfind.html>
+U¾ivatelé Rpmfind</a>( umo¾òujícího automatizovat hledání balíku z RPM
+databáze.), musí provést upgrade na verzi 0.98 nebo novej¹í z dùvodu
+blizkého zru¹ení zpìtné kompatibility
+<a href=http://rpmfind.net/linux/rpm2html/rpmfind.html>upgrade ...</a></p>
+<p>
+Cílem rpm2html je také identifikovat závislosti mezi
+rùznými balíky a nalezení balíku(ù) poskytujících zdroje
+potøebné pro instalaci daného balíku. Ka¾dý balík je analyzován
+pro zji¹tìní závislostí a zdrojù, které nabízí. Tyto
+vztahy jsou vyjádøeny pomocí odkazù v generovaných
+stránkách. Nalezení balíku poskytující zdroj je pak otázkou
+nìkolika málo klikù my¹í!</p>
+<p>
+Dal¹í výhodou jsou øazené stránky umo¾òující u¾ivateli najít
+balík podle rùzných kritérií(s ohledem na správný popis balíkù od správce).</p>
+<p>
+Nauète se jak <a href=http://rpmfind.net/linux/rpm2html/mirror.html>
+vytvoøit va¹e vlastní zrcadlo</a> této sítì (v angliètinì). <B><font
+color="#FF0000" size="+2">Nedìlejte zrcadlo pomocí Web-kopírovacích programù
+</font></b></p>
+
+Tento archív obsahuje %d RPMs reprezentujících %d MB dat
+
+Na tomto poèítaèi je instalováno %d RPMs reprezentujicích %d MB dat
+
+Seznam
+
+RPM øazených podle kategorie
+
+RPM øazených podle data vytvoøení
+
+RPM øazených podle jména
+
+RPM øazených podle údr¾báøe
+
+RPM øazených podle distribuce
+
+RPM øazených podle data vytvoøení
+
+Archiv zdrojù
+
+Lokální zrcadlo
+
+Zrcadla
+
+Generování trvalo
+
+sekund
+
+Vítejte v popisu RPM
+
+z
+
+Jméno
+
+Distribuce
+
+Verze
+
+Správce
+
+Release
+
+Datum pøekladu
+
+Datum instalace
+
+Kategorie
+
+Pøekládáno na
+
+Velikost
+
+Zdrojový balík
+
+Balík vytvoøil
+
+URL
+
+Shrnutí
+
+Poskytuje
+
+Vy¾aduje
+
+Autorská práva
+
+Soubory
+
+Není seznam souborù v balíku !
+
+Není shrnutí !
+
+RPM zdroj
+
+Poskytováno
+
+RPM øazené podle kategorie
+
+RPM z kategorie
+
+RPM øazené podle distribuce
+
+RPM z distribuce
+
+RPM øazené podle správce
+
+RPM kde distribce je
+
+RPM øazené podle data instalace
+
+RPM øazené podle data vytvoøení
+
+RPM ménì ne¾ tøi dny staré
+
+RPM ménì ne¾ jeden týden staré
+
+RPM ménì ne¾ dva týdny staré
+
+RPM ménì ne¾ jeden mìsíc staré
+
+RPM více ne¾ jeden mìsíc staré
+
+RPM vytvoøené ménì ne¾ pøed tøemi dny
+
+RPM vytvoøené ménì ne¾ pøed jedním týdnem
+
+RPM vytvoøené ménì ne¾ pøed dvìmi týdny
+
+RPM vytvoøené ménì ne¾ pøed jedním mìsícem
+
+RPM vytvoøené více ne¾ pøed jedním mìsícem
+
+index podle jména
+
+®ádný popis !
+
+neoznaèena
+
+Nic
+
+nezmámá/kategorie
+
+neznámý.poèítaè
+
+Index
+
+Balíky zaèínající písmenem
+
+Varování: tento balík neexportuje správný seznam zdrojù
+
+Vyzkou¹ejte jiný
+
+Více
+
+Zmìna logu
+
+Podadresáøe
+
+Tree.html
+
+Prohlédnout strom distribuce

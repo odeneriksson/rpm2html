@@ -1,0 +1,104 @@
+Todo:
+- change URLs to old rpmfind.net to new website
+- new website (at Savannah)
+- make it possible to configure extension of output files while with
+  templates we can produce .xml, .php, ...)
+- try to speed-up processing by comparing last-modification-time of package
+  and pages which are generated (only) from that package and generate the
+  page only if package is newer, i.e. the modification date of the package
+  file is newer then either mod. data of the package's HTML page, template's
+  file, configuration's file or mod. time of the rpm2html binary itself
+- try to further speed-up processing by caching package attributes in DB
+  cache (db4?) and only process packages not in the cache or if they were
+  modified from previous run - then also regenerate only pages generated
+  from changed info (this means making some package -> page "dependency"
+  tracking)
+- resolve errors with libxml as experienced for example by users of RDF
+  functionality: xmlEncodeEntitiesReentrant : input not UTF-8 (reported by
+  Andreas Radke)
+- resolve 'make dist' (does not work) vs. 'make distrib' (works) in Makefile
+- do not cosider new packages based on their time of creation but based on
+  their apearing in the repo (i.e. if the lastOprevious time the rpm2html
+  was running and the package was not there - and now is - it is new) =>
+  there should be some status info implemented to keep track of known (thus
+  not new) packages - necessary especialy for RDF feed: when packages are
+  added into repo days or even weeksafter creation are then not indicated as
+  new
+- GPG signatures: when GPG support is compiled in, add configuration
+  parameter to turn it off
+- add <body onload="setFocus()"> to the PHP searches
+- handle directories with invalid chars for URI, either escape,
+  or more brutal/simple, skip them.
+- Maintain the coherency RPM <-> HTML when packages are removed,
+  with links to non-existent of updated packages.
+- Overflow of buffer containing the file-list, and max size.
+  Crash with 80000 bytes ! (XXX that's probably alredy fixed or if not than
+  approach similar to changelog fixing can be used)
+- User-provided Header and Footer. (we can do this with templates)
+- Extraction and display of more information:
+  + ICON
+  + GIF
+  + XPM
+- make 'protectemails' mangle 'mail' so that those maintainers who wish to
+  mangle e-mails do not have to change value of both 'protectemails' and
+  'mail' options
+
+Nice:
+- integrate a portaloo
+- store all metadata in the database
+- cleanup the Vendor/Distribution/Packager/dist mess of the database
+- build a database of GPG/PGP keys and associated packagers/distributions
+- add a Project database, offer ways for users to complement it
+- extend the database based cleanup to also remove HTML pages.
+
+Done:
+- Switch to PNG and get rid of those 2 GIFs !
+- Generate RDF channels per distro or subdirs
+- Timestamps
+- Config file using per-directory entries
+  + Local URL
+  + Remote URL
+  + Color
+  + SRC URL
+- Config for Remote distributors
+- Source RPM handling
+- Extraction and display of more information:
+  + COPYRIGHT
+  + PACKAGER
+  + URL
+- an Index file with stats and infos
+- ByName index
+- Documentation
+- Packaging
+- Give package sources information using dir colors.
+  Maybe color should be defined in a different way.
+- Multi-platform (see also OS).
+  A given package may be available for more than one platform
+- Localization.
+- More navigarion links in the Header of generated files,
+  direct links to Group, Date, Vendor
+- Handle the file modification time to avoid rewriting all
+  the files at each run, if not needed. This break HTTP caching !
+- Handle more than 2 Gig of RPM data.
+- Correct HTML output.
+- Limit size of ByDate.html
+- Add "More..." links to ByDate when overriding the limit of the
+  page size.
+- Split the ByName to be actually a set of links to smaller pages.
+- Warns if case of lack of resources lists.
+- Check for -lintl in configure.in and add -lintl in Makefile.ini
+  (Cristian Bradiceanu <cbredi@timisoara.roedu.net>).
+- Provide a mechanism to add per-base links in the navigation headers
+  (for search or help).
+- Added a man(1) page provided by Manu :-) ROUAT <rouat@congo.ceng.cea.fr>
+- Add 'changelog' fields to the resulting pages
+  (Gary Thomas <g.thomas@opengroup.org>).
+- Enforce new pages and directory to be world-readable
+  (Kirk Bauer <kirk@kaybee.org>)
+- Provide RPM packages for sources and i386 !
+- Site mapping, per-directory output and navigation.
+- Maintain the coherency RPM <-> RDF when packages are removed
+
+
+$Id: TODO,v 1.42 2010/10/05 14:36:54 hany Exp $
+

@@ -1,0 +1,92 @@
+  INSTALLING rpm2html
+  ===================
+
+rpm2html uses the RPM library, which in turn uses
+the libdb library. If one of these seems to be missing
+you should install the rpm-devel and db packages. If
+available, installing rpm2html should hopefully be
+as simple as:
+
+    ./configure
+    make
+    su
+    make install
+    
+edit /usr/local/share/rpm2html.config (see below)
+and create the directory to hold the HTML output.
+
+    make test
+
+To verify that the configuration is Ok,
+And you are ready to install it in your crontab
+  
+NOTE : 
+======
+
+- autoconf take /usr/local as the standard prefix,
+  it is possible to override the installation to some
+  place elsewhere.
+- while in use, rpm2html need only 2 files in the
+  system : the binary and the config(s) file passed as
+  argument(s).
+- No special permission are needed it just need write
+  access to the output directory and be able to read
+  the RPM directories and files.
+- if you get "/bin/sh: aclocal-1.10: command not found" from "make",
+  run `./autogen.sh`
+
+The CONFIGURATION FILE:
+=======================
+
+  Is a text file, lines beginning with semicolumns
+are comments. The first part is a global section
+defining some important parameters of rpm2html.
+Parameters are defined with the syntax:
+
+variable=value
+
+Values shouln't be quoted and end up with the end of line
+
+Variable   |   Value
+------------------------------------------------------------
+maint      | The maintainer of the local mirror, NEEDED !
+mail       | The E-mail of the maintainer, NEEDED !
+dir        | The directory for for the HTML output, NEEDED !
+url        | The URL for the HTML files on the WWW server
+host       | The hostname for the server.
+header     | An URL followed by a description (Feedback, Search ...).
+
+  After these variables, one section should be filled
+for each directory on your system containing RPM files.
+It starts with the directory filename between brackets:
+
+[The name between brackets is the directory, NEEDED !]
+
+  The special directory name [localbase] extract information
+from the RPM base of installed software instead of listing a
+directory. It allows to dump HTML pages for the installed RPM
+base on a machine.
+
+  All the variables defined below until the next
+directory or the end of file pertain to this directory.
+Here are the possible variables:
+
+Variable   |   Value
+---------------------------------------------------
+name       | A significant name for this mirror, NEEDED !
+ftp        | The original FTP/HTTP url, NEEDED !
+ftpsrc     | Where the associated sources are stored
+color      | Background color for pages
+trust      | Unused yet
+subdir     | The subdirectory for HTML output
+
+  It is possible to indicate other mirrors by adding some
+mirror=value lines withing the section. The first one
+will be considered the local one.
+
+  See PRINCIPLES for a more general comments
+
+  
+ daniel@veillard.com
+
+$Id: INSTALL,v 1.11 2010/10/05 14:36:54 hany Exp $

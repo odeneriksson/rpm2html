@@ -1,0 +1,213 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_PREREQ(2.2)
+AC_INIT(rpm2html.c)
+AM_CONFIG_HEADER(config.h)
+AC_CANONICAL_HOST
+
+RPM2HTML_MAJOR_VERSION=1
+RPM2HTML_MINOR_VERSION=11
+RPM2HTML_MICRO_VERSION=2
+RPM2HTML_VERSION=$RPM2HTML_MAJOR_VERSION.$RPM2HTML_MINOR_VERSION.$RPM2HTML_MICRO_VERSION
+RPM2HTML_VERSION_INFO=`expr $RPM2HTML_MAJOR_VERSION + $RPM2HTML_MINOR_VERSION`:$RPM2HTML_MICRO_VERSION:$RPM2HTML_MINOR_VERSION
+
+RPM2HTML_VERSION_NUMBER=`expr $RPM2HTML_MAJOR_VERSION \* 10000 + $RPM2HTML_MINOR_VERSION \* 100 + $RPM2HTML_MICRO_VERSION`
+
+AC_SUBST(RPM2HTML_MAJOR_VERSION)
+AC_SUBST(RPM2HTML_MINOR_VERSION)
+AC_SUBST(RPM2HTML_MICRO_VERSION)
+AC_SUBST(RPM2HTML_VERSION)
+AC_SUBST(RPM2HTML_VERSION_INFO)
+AC_SUBST(RPM2HTML_VERSION_NUMBER)
+
+VERSION=${RPM2HTML_VERSION}
+
+AM_INIT_AUTOMAKE(rpm2html, $VERSION)
+
+AC_SUBST(VERSION)
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_LN_S
+AC_PROG_INSTALL
+AC_PATH_PROG(CP, cp, /bin/cp)
+AC_PATH_PROG(RM, rm, /bin/rm)
+AC_PATH_PROG(MV, mv, /bin/mv)
+AC_PATH_PROG(TAR, tar, /bin/tar)
+AC_PATH_PROG(GZIP, gzip, /bin/gzip)
+
+dnl Checks for libraries.
+dnl Replace `main' with a function in -lrpm:
+for z in z gz ; do
+   AC_CHECK_LIB(${z}, deflate,
+     [LIBS="-l${z} $LIBS"; break])
+done
+
+AC_CHECK_LIB(bz2, bzread,
+  [LIBS="$LIBS -lbz2"],
+   AC_CHECK_LIB(bz2, BZ2_bzread, [
+     LIBS="$LIBS -lbz2" ],
+     AC_MSG_WARN([rpm needs libbz2.a (from the bzip2 package)])))
+
+AC_SUBST(LIBS)
+
+AC_CHECK_LIB(intl, gettext)
+
+AC_CHECK_FUNC(dbopen, [], [
+    AC_CHECK_LIB(db-3.1, db_create, [LIBS="-ldb-3.1 $LIBS"],
+      AC_CHECK_LIB(db-3.0, db_create, [LIBS="-ldb-3.0 $LIBS"],
+        AC_CHECK_LIB(db1, dbopen, [LIBS="-ldb1 $LIBS"],
+          AC_CHECK_LIB(db, dbopen, [LIBS="-ldb $LIBS"],
+             [LIBS="-lbz2 -lpthread -lrt $LIBS"]))))
+])
+
+AC_CHECK_LIB(popt, poptGetContext,
+  [LIBS="-lpopt $LIBS"],
+  AC_MSG_ERROR(*** libpopt not found))
+
+AC_CHECK_LIB(rpmio, Fopen,
+  [LIBS="-lrpmio $LIBS";
+	AC_DEFINE_UNQUOTED(USE_RPMIO, 1)
+	AC_SUBST(USE_RPMIO)
+	USE_RPMIO=1
+  ])
+
+AC_CHECK_LIB(rpmdb, rpmdbOpen, [LIBS="-lrpm -lrpmdb $LIBS"],
+  AC_CHECK_LIB(rpm, rpmReadConfigFiles, [LIBS="-lrpm $LIBS"],
+    AC_MSG_ERROR(*** librpm not found)
+  ), -lrpm
+)
+
+AC_CHECK_LIB(rpm, rpmBuildFileList, [],
+  [AC_DEFINE_UNQUOTED(HAVE_RPM42, 1) AC_SUBST(HAVE_RPM42)],
+)
+
+dnl
+dnl Is there a specific path for RPM stuff ?
+dnl
+
+RPM_CFLAGS="-I/usr/include/rpm"
+RPM_LIBS="-L/usr/lib"
+AC_ARG_WITH(rpm-prefix, [  --with-rpm-prefix       Prefix for RPM  (/usr)])
+if test "$with_rpm_prefix" != "" ; then
+    RPM_CFLAGS="-I$with_rpm_prefix/include/rpm"
+    RPM_LIBS="-L$with_rpm_prefix/libs"
+fi
+
+AC_ARG_WITH(rpm-includes, [  --with-rpm-includes     Includes for RPM  (/usr/include/rpm)])
+if test "$with_rpm_includes" != "" ; then
+    RPM_CFLAGS="-I$with_rpm_includes"
+fi
+
+AC_ARG_WITH(rpm-flags, [  --with-rpm-flags        Libs for RPM  (/usr/lib)])
+if test "$with_rpm_flags" != "" ; then
+    RPM_LIBS="-L$with_rpm_flags"
+fi
+
+AC_SUBST(RPM_CFLAGS)
+AC_SUBST(RPM_LIBS)
+
+dnl hack: we're gonna use rpm-3.1
+AC_DEFINE_UNQUOTED(USE_RPM310, 1)
+AC_SUBST(USE_RPM310)
+AC_CHECK_LIB(rpm, rpmReadConfigFiles,,AC_MSG_ERROR(*** rpm lib not found))
+
+dnl
+dnl Checking for libxml
+dnl
+AC_CHECK_PROG(XML2_CONFIG, xml2-config, xml2-config)
+if test "$XML2_CONFIG" = ""
+then
+    AC_CHECK_PROG(XML_CONFIG, xml-config, xml-config)
+    if test "$XML_CONFIG" != ""
+    then
+	XML_LIBS="`$XML_CONFIG --libs`"
+	XML_CFLAGS="`$XML_CONFIG --cflags`"
+    else
+	echo 'rpm2html needs libxml(2) to be installed'
+	echo 'On Linux you will need the libxml(2) and libxml(2)-devel packages'
+	echo 'You can find them at ftp://xmlsoft.org/'
+	exit 1
+    fi
+else
+    XML_LIBS="`$XML2_CONFIG --libs`"
+    XML_CFLAGS="`$XML2_CONFIG --cflags`"
+fi
+AC_SUBST(XML_LIBS)
+AC_SUBST(XML_CFLAGS)
+
+dnl Checks for header files.
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+AC_CHECK_HEADERS(db_185.h db1/db.h)
+AC_CHECK_HEADERS(fcntl.h unistd.h ctype.h dirent.h errno.h malloc.h)
+AC_CHECK_HEADERS(rpm/rpmio.h)
+AC_CHECK_HEADERS(stdarg.h sys/stat.h sys/types.h time.h)
+AC_CHECK_HEADERS(zlib.h rpm/rpmlib.h)
+AC_CHECK_HEADERS(rpm/rpmlegacy.h)
+
+
+dnl Checks for library functions.
+AC_FUNC_STRFTIME
+AC_CHECK_FUNCS(gethostname strdup strndup strerror snprintf unlink)
+
+dnl
+dnl Do we plug in the database backend ?
+dnl
+
+SQL_FLAGS=
+SQL_OBJ=
+SQL_PROGS=
+AC_ARG_WITH(sql, [  --with-sql              Add the SQL support (off)])
+if test "$with_sql" = "yes" ; then
+    LIBS="$LIBS -L/usr/lib/mysql"
+    AC_CHECK_LIB(mysqlclient, mysql_init,
+      [LIBS="$LIBS -lmysqlclient"],
+      AC_MSG_ERROR(*** libmysqlclient not found))
+
+    echo Enabling SQL support
+    SQL_FLAGS="-DWITH_SQL"
+    SQL_OBJ=sql.o
+    SQL_PROGS=sqltools
+fi
+AM_CONDITIONAL(WITH_MYSQL, test "${with_sql}" = "yes")
+AC_SUBST(SQL_FLAGS)
+AC_SUBST(SQL_PROGS)
+AC_SUBST(SQL_OBJ)
+
+dnl
+dnl Do we plug in the gpg?
+dnl
+
+GPG_FLAGS=
+GPG_PROG=
+AC_ARG_WITH(gpg, [  --with-gpg              Add the GPG support (off)])
+if test "x$with_gpg" != "x" ; then
+    if test "$with_gpg" = "yes" ; then
+        AC_PATH_PROG(GPG_PROG, gpg, /usr/bin/gpg)
+    else
+        AC_PATH_PROG(GPG_PROG, gpg, "$with_gpg")
+    fi
+
+    dnl for now, signature resolving code is implemented only with librpmio
+    dnl so without librpmio it wont work
+    if test "x$USE_RPMIO" != "x1" ; then
+	AC_MSG_ERROR([*** librpmio not found, use --without-gpg])
+    fi
+
+    echo Enabling GPG support
+    GPG_FLAGS="-DWITH_GPG -DGPG_PROG=\\\"$GPG_PROG\\\""
+fi
+AC_SUBST(GPG_FLAGS)
+AC_SUBST(GPG_PROG)
+
+AC_ARG_WITH(template, [  --with-template         Add the libtemplate support (off)])
+if test "$with_template" = "yes" ; then
+  AC_CHECK_LIB(template, tpl_parse,
+    [LIBS="-ltemplate $LIBS" AC_DEFINE([HAVE_LIBTEMPLATE], 1, [use templating engine libtemplate])],
+    [AC_CHECK_LIB(llt, tpl_parse,
+      [LIBS="-lllt $LIBS" AC_DEFINE([HAVE_LIBTEMPLATE], 1, [use templating engine libtemplate])],
+      [AC_MSG_ERROR(*** libtemplate not found)])])
+  echo Enabling libtemplate support
+fi
+
+AC_OUTPUT(rpm2html.spec Makefile)

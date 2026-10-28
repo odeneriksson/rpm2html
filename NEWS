@@ -1,0 +1,253 @@
+rpm2html 1.11.2
+***************
+
+This release is considered development and may break compatibility with RPM
+releases other than rpm.org's rpm 4.6 . More testing is needed for
+development releases.
+
+Changes since last release 1.11.1:
+
+Minor improvements and fixes:
+
+* option 'dump_html_only_if_rpm_newer' has been added so users can
+  enable the comparison of file modification timestamps of the RPM
+  file and dumped HTML file - when enabled, HTML file is dumped for
+  RPM file only if HTML does not exists yet or its timestamp is
+  older than that of RPM file (default is disabled)
+  note: for now it works only for per-RPM package HTML pages.
+
+
+rpm2html 1.11.1
+***************
+
+This release is considered development and may break compatibility with RPM
+releases other than rpm.org's rpm 4.6 . More testing is needed for
+development releases.
+
+Changes since last release 1.11.0:
+
+Minor improvements and fixes:
+
+* smoother RPM build using the supplied spec
+* reenabled support for package signature processing for RPM prior to 4.6
+* fixed typos in man page (patch from Michal Čihař <nijel@debian.org>)
+* removed double open which can bring speed-ups around 20%
+
+
+rpm2html 1.11.0
+***************
+
+This release is considered development and may break compatibility with RPM
+releases other than rpm.org's rpm 4.6 . Testing is needed for such releases.
+
+Changes since last release 1.10.0:
+
+New minor features:
+
+* preliminary support for compilation against RPM.org's rpm 4.6 using
+  rpmlegacy.h
+
+
+rpm2html 1.10.0
+***************
+
+This release is considered stable and is not expected to break things.
+
+Changes since last release 1.9.7:
+
+None.
+
+
+Changes since last stable release 1.8.3:
+
+Some new features:
+
+* e-mail protection (mangle e-mail adresses in HTML
+  output)
+* 'Mirrors' link can be configured in configuration file
+  (see 'header=... Mirrors' line in example configuration files)
+* option 'rdf_count_limit' has been added so users can customize the limit
+  of RDF export (default value was and still is 20)
+* possibility to build rpm2html using Lazarus libtemplate
+  (http://www.lazarusid.com/libtemplate.shtml) and option 'html_template' to
+  specify template to use
+* option 'cve_linking' (enabled by default) which adds hyperlinks to any
+  CVE-xxxx-yyyy and CAN-xxxx-yyyy numbers occuring in the changelog (links
+  go to cve.mitre.org) - based on patch from
+  blacksuninc@users.sourceforge.net
+
+and a lot of bugfixes.
+
+
+rpm2html 1.9.7
+**************
+
+This release is considered development but it is not expected to break
+things.
+
+Changes since last release 1.9.6:
+
+New minor features:
+
+* protect more email addresses in changelog, not just those enclosed in <>
+  plus protect also email addresses from PGP/GPG signatures
+
+
+and fixes:
+
+* fixed usage of configure's --with-gpg parameter - happened to be broken a
+  while ago thus making it impossible to enable GPG support
+
+* do not use whole local directory name in page title
+
+
+rpm2html 1.9.6
+**************
+
+This release is considered development but it is not expected to break
+things.
+
+Changes since last release 1.9.5:
+
+Just fixes:
+
+* fixed error messages like "couldn't open <RDF
+  base>/usr/share/man/man5/aliases.5.gz.rdf for writing !"
+
+* fixed error when compiling without libtemplate support
+
+* added 'BuildRequires: automake' into RPM spec file
+
+
+rpm2html 1.9.5
+**************
+
+This release is considered development but it is not expected to break
+things.
+
+Changes since last release 1.9.4:
+
+Just fixes:
+
+* fixed "rdf_count_limit" option handling (option has been so far ignored by
+  mistake)
+
+* fixed setting of 'next_page' template variable for 'dates_next_page'
+  template item ("..." link at the end of "by date" pages)
+
+
+rpm2html 1.9.4
+**************
+
+This release is considered development but (again and this time hopefully
+for real) is not expected to break things.
+
+Changes since last release 1.9.3:
+
+Just fixes:
+
+* fixed some memory leaks
+
+* fixed segmentation fault occuring when generating pages describing local
+  configuration with libtemplate enabled
+
+* added missing BuildRequires into spec file
+
+Plus little more verbose messages has been added informing the user which
+general group of page generation is being done.
+
+
+rpm2html 1.9.3
+**************
+
+This release is considered development but (again) is not expected to break
+things.
+
+Changes since last release 1.9.2:
+
+New features:
+
+* possibility to build rpm2html using Lazarus libtemplate
+  (http://www.lazarusid.com/libtemplate.shtml) and option 'html_template' to
+  specify template to use
+
+* option 'cve_linking' (enabled by default) which adds hyperlinks to any
+  CVE-xxxx-yyyy and CAN-xxxx-yyyy numbers occuring in the changelog (links
+  go to cve.mitre.org) - based on patch from
+  blacksuninc@users.sourceforge.net
+
+Fixes:
+
+* accept '(' and ')' in resource names thus fixing the Requires list for
+  64-bit packages - patch by R. Scott Bailey
+
+* accept '(' and ')' in groups thus reduce the amount of "garbled group"
+  warnings
+
+* little documentation clean-up and update
+
+
+rpm2html 1.9.2
+**************
+
+This release is considered development but (again) is not expected to break 
+things.
+
+Changes since last release 1.9.1:
+
+New features:
+
+* option 'rdf_count_limit' has been added so users can customize the limit
+  of RDF export (default value was and still is 20)
+
+Fixes:
+
+* disabled length check for "garbled" warnings
+
+
+rpm2html 1.9.1
+**************
+
+This release is considered development but is not expected to break things.
+
+Changes since last release 1.9.0:
+
+New features:
+
+* 'Mirrors' link can be configured in configuration file
+  (see 'header=... Mirrors' line in example configuration files)
+
+Fixes:
+
+* home page URLs has been updated
+* moderated "Invalid package <name> : garbled release" error message:
+  release is considered garbled if it is longer than 65 characters
+  (instead of 20)
+* fixed coredumps caused by large changelogs
+
+
+rpm2html 1.9.0
+**************
+
+This release is considered development but is not expected to break things.
+
+Changes since last release 1.8.3:
+
+* added new feature: e-mail protection (mangle e-mail adresses in HTML
+  output) - see 'protectemails' entry in manuel.html or example
+  configuration files
+* fixed changelog parsing
+* fixed handling of empty filelists
+* home page URL has been updated in manuel.html
+
+
+rpm2html 1.8.3
+**************
+
+Changes since 1.8.2:
+
+* GIF images replaced with PNG images
+* fixed bugs in configure.in affecting usage of 'configure --with-gpg'
+
+
+$Id: NEWS,v 1.20 2010/11/09 22:25:55 hany Exp $
