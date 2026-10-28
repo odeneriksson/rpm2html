@@ -908,13 +908,9 @@ void dumpResRdf(rpmRessPtr res) {
 	}
 	if (fread(buffer2, size, 1, output) != 1) {
 	    fprintf(stderr, "Problem reading from %s !\n", file);
-	}
-	fclose(output);
-
-	/*
-	 * Now compare the content !
-	 */
-	if (!memcmp(buffer, buffer2, size)) {
+	} else if (!memcmp(buffer, buffer2, size)) {
+	    /* Compare only bytes that were successfully read. */
+	    fclose(output);
 	    xmlFree(buffer2);
 	    xmlFree(buffer);
 	    if (rpm2htmlVerbose > 1)
@@ -922,6 +918,7 @@ void dumpResRdf(rpmRessPtr res) {
 	    xmlFree(file);
 	    return;
 	}
+	fclose(output);
 	xmlFree(buffer2);
     }
 
@@ -940,9 +937,10 @@ void dumpResRdf(rpmRessPtr res) {
     }
     if (fwrite(buffer, size, 1, output) != 1) {
         fprintf(stderr, "Problem writing to %s !\n", file);
-	xmlFree(buffer);
     }
-    fclose(output);
+    if (fclose(output) != 0) {
+        fprintf(stderr, "Problem closing %s after writing !\n", file);
+    }
     xmlFree(buffer);
     xmlFree(file);
 }

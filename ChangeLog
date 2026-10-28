@@ -1,5 +1,13 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rdf.c (dumpResRdf): Do not compare the output buffer with
+	uninitialized contents when reading an existing resource RDF file
+	fails.  Avoid freeing the generated RDF buffer twice on fwrite
+	failure.  Report errors when closing a newly written RDF file,
+	including failures flushing buffered output.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rdf.c (dumpResRdf): Allocate enough space for the complete RDF
 	resource filename and its suffix rather than formatting it into a
 	fixed-size buffer.  Preserve the historical slash-to-underscore
