@@ -1,5 +1,13 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rpmopen.c (rpmopenXmlStrdup): Add a file-local libxml2 string
+	duplication helper returning char *, preserving xmlFree ownership.
+	(rpmDirScanOneDir, rpmDirScanOneDist, rpmDirScanAll): Use it
+	for the 24 directory-default string copies.  Retain all defaulting
+	conditions, values, and repository scanning behavior.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rpmdata.c (protectEmail): Use char * for the dynamically allocated
 	output buffer and its cursor/end pointers, matching the public char *
 	return type and the C string functions.  Keep the input byte as

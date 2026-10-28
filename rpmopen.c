@@ -100,6 +100,13 @@ rpm2htmlHeaderGetEntry(Header h, rpmTagVal tag, int *type,
 
 #define headerGetEntry rpm2htmlHeaderGetEntry
 
+/* Preserve libxml2 allocation while exposing C string fields as char *. */
+static char *
+rpmopenXmlStrdup(const char *value)
+{
+    return (char *) xmlStrdup((const xmlChar *) value);
+}
+
 /*
  * Get the internal number associated with an RPM tag.
  */
@@ -1377,21 +1384,21 @@ rpmDirScanOneDir(const char *directory)
      * Override default setting.
      */
     if ((dir->maint == NULL) && (rpm2html_maint != NULL))
-        dir->maint = xmlStrdup(rpm2html_maint);
+        dir->maint = rpmopenXmlStrdup(rpm2html_maint);
     if ((dir->mail == NULL) && (rpm2html_mail != NULL))
-        dir->mail = xmlStrdup(rpm2html_mail);
+        dir->mail = rpmopenXmlStrdup(rpm2html_mail);
     if ((dir->ftp == NULL) && (rpm2html_ftp != NULL))
-        dir->ftp = xmlStrdup(rpm2html_ftp);
+        dir->ftp = rpmopenXmlStrdup(rpm2html_ftp);
     if ((dir->ftpsrc == NULL) && (rpm2html_ftpsrc != NULL))
-        dir->ftpsrc = xmlStrdup(rpm2html_ftpsrc);
+        dir->ftpsrc = rpmopenXmlStrdup(rpm2html_ftpsrc);
     if ((dir->dir == NULL) && (rpm2html_dir != NULL))
-        dir->dir = xmlStrdup(rpm2html_dir);
+        dir->dir = rpmopenXmlStrdup(rpm2html_dir);
     if ((dir->host == NULL) && (rpm2html_host != NULL))
-        dir->host = xmlStrdup(rpm2html_host);
+        dir->host = rpmopenXmlStrdup(rpm2html_host);
     if ((dir->name == NULL) && (rpm2html_name != NULL))
-        dir->name = xmlStrdup(rpm2html_name);
+        dir->name = rpmopenXmlStrdup(rpm2html_name);
     if ((dir->url == NULL) && (rpm2html_url != NULL))
-        dir->url = xmlStrdup(rpm2html_url);
+        dir->url = rpmopenXmlStrdup(rpm2html_url);
 
     if (dir->rpmdir == NULL) {
         fprintf(stderr, "?!? rpmDir without directory ?!? disabled !\n");
@@ -1470,21 +1477,21 @@ rpmDirScanOneDist(const char *dist)
      * Override default setting.
      */
     if ((dir->maint == NULL) && (rpm2html_maint != NULL))
-        dir->maint = xmlStrdup(rpm2html_maint);
+        dir->maint = rpmopenXmlStrdup(rpm2html_maint);
     if ((dir->mail == NULL) && (rpm2html_mail != NULL))
-        dir->mail = xmlStrdup(rpm2html_mail);
+        dir->mail = rpmopenXmlStrdup(rpm2html_mail);
     if ((dir->ftp == NULL) && (rpm2html_ftp != NULL))
-        dir->ftp = xmlStrdup(rpm2html_ftp);
+        dir->ftp = rpmopenXmlStrdup(rpm2html_ftp);
     if ((dir->ftpsrc == NULL) && (rpm2html_ftpsrc != NULL))
-        dir->ftpsrc = xmlStrdup(rpm2html_ftpsrc);
+        dir->ftpsrc = rpmopenXmlStrdup(rpm2html_ftpsrc);
     if ((dir->dir == NULL) && (rpm2html_dir != NULL))
-        dir->dir = xmlStrdup(rpm2html_dir);
+        dir->dir = rpmopenXmlStrdup(rpm2html_dir);
     if ((dir->host == NULL) && (rpm2html_host != NULL))
-        dir->host = xmlStrdup(rpm2html_host);
+        dir->host = rpmopenXmlStrdup(rpm2html_host);
     if ((dir->name == NULL) && (rpm2html_name != NULL))
-        dir->name = xmlStrdup(rpm2html_name);
+        dir->name = rpmopenXmlStrdup(rpm2html_name);
     if ((dir->url == NULL) && (rpm2html_url != NULL))
-        dir->url = xmlStrdup(rpm2html_url);
+        dir->url = rpmopenXmlStrdup(rpm2html_url);
 
     if (dir->rpmdir == NULL) {
         fprintf(stderr, "?!? rpmDir without directory ?!? disabled !\n");
@@ -1565,21 +1572,21 @@ rpmDirScanAll(void)
          * Complete with default setting.
          */
         if ((dir->maint == NULL) && (rpm2html_maint != NULL))
-            dir->maint = xmlStrdup(rpm2html_maint);
+            dir->maint = rpmopenXmlStrdup(rpm2html_maint);
         if ((dir->mail == NULL) && (rpm2html_mail != NULL))
-            dir->mail = xmlStrdup(rpm2html_mail);
+            dir->mail = rpmopenXmlStrdup(rpm2html_mail);
         if ((dir->ftp == NULL) && (rpm2html_ftp != NULL))
-            dir->ftp = xmlStrdup(rpm2html_ftp);
+            dir->ftp = rpmopenXmlStrdup(rpm2html_ftp);
         if ((dir->ftpsrc == NULL) && (rpm2html_ftpsrc != NULL))
-            dir->ftpsrc = xmlStrdup(rpm2html_ftpsrc);
+            dir->ftpsrc = rpmopenXmlStrdup(rpm2html_ftpsrc);
         if ((dir->dir == NULL) && (rpm2html_dir != NULL))
-            dir->dir = xmlStrdup(rpm2html_dir);
+            dir->dir = rpmopenXmlStrdup(rpm2html_dir);
         if ((dir->host == NULL) && (rpm2html_host != NULL))
-            dir->host = xmlStrdup(rpm2html_host);
+            dir->host = rpmopenXmlStrdup(rpm2html_host);
         if ((dir->name == NULL) && (rpm2html_name != NULL))
-            dir->name = xmlStrdup(rpm2html_name);
+            dir->name = rpmopenXmlStrdup(rpm2html_name);
         if ((dir->url == NULL) && (rpm2html_url != NULL))
-            dir->url = xmlStrdup(rpm2html_url);
+            dir->url = rpmopenXmlStrdup(rpm2html_url);
 
         if (dir->rpmdir == NULL) {
             fprintf(stderr,
