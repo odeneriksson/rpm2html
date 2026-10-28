@@ -108,10 +108,10 @@ rdfSchema rdfNewSchema() {
     xmlDocPtr res;
     xmlNsPtr rdf;
    
-    res = xmlNewDoc("1.0");
-    res->xmlRootNode = xmlNewDocNode(res, NULL, "RDF", NULL);
-    rdf = xmlNewNs(res->xmlRootNode, "http://www.w3.org/TR/WD-rdf-syntax#", "RDF");
-    rdf = xmlNewNs(res->xmlRootNode, "http://www.w3.org/1999/02/22-rdf-syntax-ns#", "rdf");
+    res = xmlNewDoc(BAD_CAST "1.0");
+    res->xmlRootNode = xmlNewDocNode(res, NULL, BAD_CAST "RDF", NULL);
+    rdf = xmlNewNs(res->xmlRootNode, BAD_CAST "http://www.w3.org/TR/WD-rdf-syntax#", BAD_CAST "RDF");
+    rdf = xmlNewNs(res->xmlRootNode, BAD_CAST "http://www.w3.org/1999/02/22-rdf-syntax-ns#", BAD_CAST "rdf");
     xmlSetNs(res->xmlRootNode, rdf);
 
     return((rdfSchema) res);
@@ -127,7 +127,7 @@ rdfNamespace rdfNewNamespace(rdfSchema rdf, const char *url,
    
     root = xmlDocGetRootElement(rdf);
     if (root != NULL)
-	ns = xmlNewNs(root, url, namespace);
+	ns = xmlNewNs(root, BAD_CAST url, BAD_CAST namespace);
 
     return((rdfNamespace) ns);
 }
@@ -141,7 +141,7 @@ rdfNamespace rdfGetNamespace(rdfSchema rdf, const char *href) {
     xmlNodePtr root;
 
     root = xmlDocGetRootElement(rdf);
-    return((rdfNamespace) xmlSearchNsByHref(rdf, root, href));
+    return((rdfNamespace) xmlSearchNsByHref(rdf, root, BAD_CAST href));
 }
 
 /*
@@ -216,9 +216,9 @@ rdfDescription rdfAddDescription(rdfSchema schema, const char *id,
     xmlNodePtr root;
 
     root = xmlDocGetRootElement(schema);
-    tree = xmlNewChild(root, NULL, "Description", NULL);
+    tree = xmlNewChild(root, NULL, BAD_CAST "Description", NULL);
     if (id != NULL) {
-        xmlNewProp(tree, "ID", id);
+        xmlNewProp(tree, BAD_CAST "ID", BAD_CAST id);
     }
     if (about != NULL) {
         xmlNewProp(tree, BAD_CAST "about", BAD_CAST about);
@@ -268,7 +268,7 @@ char *rdfGetElementResource(rdfSchema schema, rdfElement elem) {
 }
 
 void rdfSetElementResource(rdfSchema schema, rdfElement elem, const char *URI) {
-    xmlSetProp(elem, "resource", URI);
+    xmlSetProp(elem, BAD_CAST "resource", BAD_CAST URI);
 }
 
 /**
@@ -369,7 +369,7 @@ void rdfSetValue(rdfDescription desc, const char *property,
 	     */
 	    if (list->xmlChildrenNode != NULL)
 		xmlFreeNodeList(list->xmlChildrenNode);
-	    tmp = xmlEncodeEntitiesReentrant(desc->doc, value);
+	    tmp = xmlEncodeEntitiesReentrant(desc->doc, BAD_CAST value);
 	    list->xmlChildrenNode = xmlStringGetNodeList(desc->doc, tmp);
 	    xmlFree(tmp);
 
@@ -381,8 +381,8 @@ void rdfSetValue(rdfDescription desc, const char *property,
     /*
      * Create a new property.
      */
-    tmp = xmlEncodeEntitiesReentrant(desc->doc, value);
-    xmlNewChild(desc, ns, property, tmp);
+    tmp = xmlEncodeEntitiesReentrant(desc->doc, BAD_CAST value);
+    xmlNewChild(desc, ns, BAD_CAST property, tmp);
     xmlFree(tmp);
 }
 
@@ -430,8 +430,8 @@ rdfBag rdfBagCreate(rdfSchema schema, rdfDescription desc,
     rdfNamespace rdf;
 
     rdf = rdfGetRdfNamespace(schema);
-    cur = xmlNewChild(desc, ns, property, NULL);
-    cur = xmlNewChild(cur, rdf, "Bag", NULL);
+    cur = xmlNewChild(desc, ns, BAD_CAST property, NULL);
+    cur = xmlNewChild(cur, rdf, BAD_CAST "Bag", NULL);
     return(cur);
 }
 
@@ -443,9 +443,9 @@ rdfElement rdfBagAddValue(rdfBag bag, const char *property,
     rdfElement cur;
 
     if (value != NULL)
-        cur = xmlNewChild(bag, ns, property, (char *) value);
+        cur = xmlNewChild(bag, ns, BAD_CAST property, BAD_CAST value);
     else {
-        cur = xmlNewDocNode(bag->doc, ns, property, NULL);
+        cur = xmlNewDocNode(bag->doc, ns, BAD_CAST property, NULL);
 	if (elem != NULL)
 	    xmlAddChild(cur, elem);
 	xmlAddChild(bag, cur);
@@ -499,7 +499,7 @@ void rdfElemSetValue(rdfElement elem, const char *value) {
 	return;
     }
     if (elem->xmlChildrenNode != NULL) xmlFreeNodeList(elem->xmlChildrenNode);
-    tmp = xmlEncodeEntitiesReentrant(elem->doc, value);
+    tmp = xmlEncodeEntitiesReentrant(elem->doc, BAD_CAST value);
     elem->xmlChildrenNode = xmlStringGetNodeList(elem->doc,  tmp);
     xmlFree(tmp);
 }

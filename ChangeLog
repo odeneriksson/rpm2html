@@ -1,5 +1,14 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rdf_api.c (rdfNewSchema, rdfNewNamespace, rdfGetNamespace,
+	rdfAddDescription, rdfSetElementResource, rdfSetValue,
+	rdfBagCreate, rdfBagAddValue, rdfElemSetValue): Pass xmlChar
+	arguments to libxml2 document, namespace, attribute and element
+	creation interfaces.  Leave the public char * API and allocation
+	ownership unchanged.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rdf_api.c (rdfGetDescriptionId, rdfGetDescriptionAbout,
 	rdfGetElementResource, rdfGetValue, rdfElemGetValue,
 	rdfElemGetPropertyName): Use libxml2-compatible types when reading
