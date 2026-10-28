@@ -1,5 +1,14 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rdf.c (rpmOpenRdfFile): Check rpm->extra after allocating the
+	extra data, rather than checking the already allocated rpm pointer.
+	On allocation failure, release the rpm data and parsed RDF schema.
+	Also release the schema if the initial rpm allocation fails.
+	* rpmopen.c (rpmAnalyze): Check rpm->extra after allocation and
+	release rpm on failure to prevent a NULL dereference and leak.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* language.c (readLanguageFile): Use %zu to print the number of
 	localized messages, which has type size_t.
 	* rdf.c (rpmOpenRdfFile): Use %zu for sizeof values in

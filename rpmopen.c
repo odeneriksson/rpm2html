@@ -495,9 +495,10 @@ rpmAnalyze(char *path, char *nameRpm, const char *sigtarget,
     }
     memset(rpm, 0, sizeof(rpmData));
     rpm->extra = (rpmExtraDataPtr) xmlMalloc(sizeof(rpmExtraData));
-    if (rpm == NULL) {
+    if (rpm->extra == NULL) {
         fprintf(stderr, "cannot allocate %zu bytes: %s\n",
                 sizeof(rpmExtraData), strerror(errno));
+        xmlFree(rpm);
         return (NULL);
     }
     memset(rpm->extra, 0, sizeof(rpmExtraData));
