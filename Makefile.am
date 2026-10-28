@@ -18,15 +18,15 @@ FILES= Copyright BUGS README TODO INSTALL CHANGES PRINCIPLES \
        rpm2html.tpl \
        $(MAKE_FILES) $(CONFIG) $(RDF_FILES) $(FIND_FILES) $(USELESS)
 
-INCLUDES = -I$(top_srcdir) -I$(top_builddir) $(CFLAGS) $(XML_CFLAGS) \
-           $(RPM_CFLAGS) $(SQL_FLAGS) $(GPG_FLAGS)
+AM_CPPFLAGS = -DNO_DEBUG_MEMORY -I$(top_srcdir) -I$(top_builddir) $(XML_CFLAGS) \
+              $(RPM_CFLAGS) $(SQL_FLAGS) $(GPG_FLAGS)
 
 noinst_PROGRAMS = compressor
 compressor_SOURCES = compressor.c
 compressor_LDFLAGS =
-compressor_LDADD = $(LIBS)
+compressor_LDADD = -lz
 
-LDADDS = $(XML_LIBS) $(LIBS)
+LDADDS = $(XML_LIBS) $(RPM_LIBS) $(LIBS)
 
 if WITH_MYSQL
 bin_PROGRAMS = rpm2html sqltools

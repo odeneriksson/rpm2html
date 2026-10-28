@@ -1,3 +1,20 @@
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
+	* configure.in, configure.ac: Replace the obsolete Autoconf setup
+	  with a modern configure.ac using Autoconf 2.69 and Automake's
+	  foreign mode. Keep the upstream version at 1.11.2.
+	* configure.ac: Detect librpm and libxml2 through pkg-config,
+	  check for zlib and basic C system interfaces, and remove obsolete
+	  Berkeley DB, popt and historical RPM library probes.
+	* configure.ac: Reject the unported --with-sql, --with-gpg and
+	  --with-template options explicitly instead of silently producing
+	  an unsupported build; retain the Makefile substitutions needed
+	  for the non-SQL build.
+	* Makefile.am: Replace the deprecated INCLUDES variable with
+	  AM_CPPFLAGS, use detected RPM and libxml2 linker flags, link the
+	  compressor against zlib, and disable the legacy custom libxml2
+	  memory-debugging interposition for this initial port.
+
 Tue Nov  9 23:05:47 CET 2010 Peter Hanecak <hany@hany.sk>
 
 	* configure.in rpm2html.h: release 1.11.2 (development release)
