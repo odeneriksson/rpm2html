@@ -1,5 +1,16 @@
 2026-10-28  OpenAI ChatGPT
 
+	* html.c (sigReserve): Grow the shared signature text buffer as
+	needed, retaining the original allocation on realloc failure.
+	(sigSetResolved): Add length-checked concatenation of resolved GPG
+	and PGP signature text when built with WITH_GPG.
+	(convertSIG): Allocate enough space for MD5 hexadecimal output
+	and write it within bounds instead of using strncat with the total
+	buffer size as the append limit. Preserve ordinary output strings.
+	(sbuffer_size): Use size_t for the buffer capacity.
+
+2026-10-28  OpenAI ChatGPT
+
 	* compressor.c (create_gz_source): Explicitly cast the zlib Bytef
 	buffer to char * in the generated PNG decompressor's return
 	statement. Keep the generated function's existing char * interface,

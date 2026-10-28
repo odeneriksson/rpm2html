@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -617,50 +618,97 @@ static char *sigInfoPGP = "PGP";
 static char *sigInfoU = "unknown";
 
 static char *sbuffer = NULL;
-static int sbuffer_size = 2000;
+static size_t sbuffer_size = 2000;
 static char *sbuffer2 = NULL;
 static int sbuffer2_size = 3;
+
+/* Grow the shared signature buffer without losing it on allocation failure. */
+static void
+sigReserve(size_t required)
+{
+    char *newbuf;
+
+    if (required <= sbuffer_size)
+        return;
+
+    newbuf = (char *) xmlRealloc(sbuffer, required);
+    if (newbuf == NULL) {
+        perror("xmlRealloc failed");
+        exit(1);
+    }
+    sbuffer = newbuf;
+    sbuffer_size = required;
+}
+
+#if defined(WITH_GPG)
+static void
+sigSetResolved(const char *prefix, const char *resolved)
+{
+    size_t prefix_len = strlen(prefix);
+    size_t resolved_len = resolved == NULL ? 0 : strlen(resolved);
+
+    if (resolved_len > SIZE_MAX - prefix_len - 1) {
+        fprintf(stderr, "signature text too long\n");
+        exit(1);
+    }
+    sigReserve(prefix_len + resolved_len + 1);
+    memcpy(sbuffer, prefix, prefix_len);
+    if (resolved_len != 0)
+        memcpy(sbuffer + prefix_len, resolved, resolved_len);
+    sbuffer[prefix_len + resolved_len] = '\0';
+}
+#endif
+
 char *convertSIG(rpmSigPtr sig) {
     int n1;
     unsigned char *md5sum = (unsigned char *) sig->sig;
 
     if (sbuffer == NULL) {
         sbuffer = (char *) xmlMalloc(sbuffer_size * sizeof(char));
-	if (sbuffer == NULL) {
-	    perror("xmlMalloc failed");
-	    exit(1);
-	}
+        if (sbuffer == NULL) {
+            perror("xmlMalloc failed");
+            exit(1);
+        }
     }
     if (sbuffer2 == NULL) {
         sbuffer2 = (char *) xmlMalloc(sbuffer2_size * sizeof(char));
-	if (sbuffer2 == NULL) {
-	    perror("xmlMalloc failed");
-	    exit(1);
-	}
+        if (sbuffer2 == NULL) {
+            perror("xmlMalloc failed");
+            exit(1);
+        }
     }
 
     switch(sig->tag) {
-        case RPMSIGTAG_MD5:
-            strncpy(sbuffer, sigInfoMD5, sbuffer_size);
-            for(n1 = 0; n1 < sig->size; n1++) {
-                snprintf(sbuffer2, sbuffer2_size, "%02x", X(md5sum[n1]));
-                strncat(sbuffer, sbuffer2, sbuffer_size);
+        case RPMSIGTAG_MD5: {
+            size_t prefix_len = strlen(sigInfoMD5);
+            size_t count = sig->size > 0 ? (size_t) sig->size : 0;
+            char *cur;
+
+            if (count > (SIZE_MAX - prefix_len - 1) / 2) {
+                fprintf(stderr, "signature data too long\n");
+                exit(1);
             }
+            sigReserve(prefix_len + count * 2 + 1);
+            memcpy(sbuffer, sigInfoMD5, prefix_len);
+            cur = sbuffer + prefix_len;
+            for (n1 = 0; n1 < sig->size; n1++) {
+                snprintf(sbuffer2, sbuffer2_size, "%02x", X(md5sum[n1]));
+                memcpy(cur, sbuffer2, 2);
+                cur += 2;
+            }
+            *cur = '\0';
             return(sbuffer);
+        }
         case RPMSIGTAG_GPG:
             #if defined(WITH_GPG)
-            strncpy(sbuffer, sigInfoGPG, sbuffer_size);
-            if (sig->resolve != NULL)
-                strncat(sbuffer, sig->resolve, sbuffer_size);
+            sigSetResolved(sigInfoGPG, sig->resolve);
             return(sbuffer);
             #else
             return(sigInfoGPG);
             #endif
         case RPMSIGTAG_PGP:
             #if defined(WITH_GPG)
-            strncpy(sbuffer, sigInfoPGP, sbuffer_size);
-            if (sig->resolve != NULL)
-                strncat(sbuffer, sig->resolve, sbuffer_size);
+            sigSetResolved(sigInfoPGP, sig->resolve);
             return(sbuffer);
             #else
             return(sigInfoPGP);
