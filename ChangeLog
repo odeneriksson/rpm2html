@@ -1,5 +1,13 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rpmdata.c (protectEmail): Use char * for the dynamically allocated
+	output buffer and its cursor/end pointers, matching the public char *
+	return type and the C string functions.  Keep the input byte as
+	unsigned char and retain libxml2 allocation, reallocation, and the
+	existing e-mail substitution behavior.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rpmdata.c (rpmdataXmlStrdup): Add a file-local wrapper around
 	xmlStrdup() for copying ordinary C strings into libxml2-managed
 	allocations while preserving their char * representation.

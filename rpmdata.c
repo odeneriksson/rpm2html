@@ -910,14 +910,14 @@ char *extractURL(char *string) {
  *      with "<someone(at)domain.tld>".
  */
 
-static unsigned char *buffer = NULL;
+static char *buffer = NULL;
 static int buffer_size = 2000;
 static char *at = "(at)";
 char *protectEmail(char *string) {
     if (rpm2html_protect_emails == 0 || string == NULL)
         return string;
 
-    unsigned char *cur, *end;
+    char *cur, *end;
     unsigned char c;
 
     if (buffer == NULL) {
