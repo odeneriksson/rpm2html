@@ -221,18 +221,7 @@ rdfDescription rdfAddDescription(rdfSchema schema, const char *id,
         xmlNewProp(tree, "ID", id);
     }
     if (about != NULL) {
-        if (oldXMLWDcompatibility) {
-	    rdfNamespace ns;
-	    char *buf;
-
-	    ns = rdfGetRdfNamespace(schema);
-	    buf = (char *) xmlMalloc(strlen(ns->prefix) + 10);
-	    sprintf(buf, "%s:HREF", ns->prefix);
-	    xmlNewProp(tree, buf, about); 
-	    xmlFree(buf);
-        } else {
-	    xmlNewProp(tree, "about", about); 
-	}
+        xmlNewProp(tree, BAD_CAST "about", BAD_CAST about);
     }
     return((rdfDescription) tree);
 }
