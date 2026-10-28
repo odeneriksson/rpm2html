@@ -1,5 +1,13 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rdf.c (dumpRpmRdf): Do not free either RDF data buffer on
+	a failed fread and then use them in memcmp.  Compare only after
+	a successful read.  Free the serialized RDF buffer when opening
+	the output file fails.  Check fclose to report buffered write
+	errors, and release the buffer after closing the output stream.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rdf.c (dumpResRdf): Do not compare the output buffer with
 	uninitialized contents when reading an existing resource RDF file
 	fails.  Avoid freeing the generated RDF buffer twice on fwrite
