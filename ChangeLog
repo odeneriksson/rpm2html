@@ -1,5 +1,13 @@
 2026-10-29  OpenAI ChatGPT
 
+	* compressor.c (main): Honor an explicit -n data_name when
+	processing the next input file instead of overwriting it with a
+	generated identifier. Reset the selection after each file so
+	subsequent input files retain their own default symbol names.
+	Reject a missing argument to -n with a diagnostic.
+
+2026-10-29  OpenAI ChatGPT
+
 	* compressor.c (main): Format input pathnames with snprintf()
 	instead of unchecked strcpy() and strcat() calls. Check the
 	length of absolute and working-directory-relative paths before

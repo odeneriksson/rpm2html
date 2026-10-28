@@ -170,6 +170,10 @@ int main(int argc, char **argv)
                 if (name[0] == '-') {
 		    switch (name[1]) {
 		        case 'n':
+			    if (argc < 2) {
+			        fprintf(stderr, "missing data name after -n\n");
+			        return 1;
+			    }
 			    data_name = *++argv;
 			    argc--;
 			    continue;
@@ -207,8 +211,11 @@ int main(int argc, char **argv)
 		/*
 		 * do the work !
 		 */
-		data_name = get_data_name(name);
+		if (data_name == NULL)
+		    data_name = get_data_name(name);
 		create_gz_source(fullname);
+		/* Apply an explicit -n name only to the next input file. */
+		data_name = NULL;
 
 	}
 	return 0;
