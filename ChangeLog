@@ -1,5 +1,12 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rdf.c (dumpMetadataListRdf): Compare existing RDF contents only
+	after a successful read.  Free the generated RDF buffer when
+	opening the output file fails.  Report fclose errors that may
+	indicate buffered write failures.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rdf.c (dumpDistRdf): Compare RDF data only after a successful
 	read of the existing file, avoiding the use of uninitialized data
 	on fread failure.  Avoid freeing the generated RDF buffer twice
