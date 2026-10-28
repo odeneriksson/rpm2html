@@ -32,19 +32,6 @@
 #include <rpm/rpmfi.h>
 #endif
 
-#ifndef HAVE_RPM_RPMLEGACY_H
-int readLead(FD_t fd, /*@out@*/struct rpmlead *lead);
-#endif
-#ifdef HAVE_RPM42
-typedef enum sigType_e {
-    RPMSIGTYPE_HEADERSIG= 5     /*!< Header style signature */
-} sigType;
-
-int rpmReadSignature(FD_t fd, Header *sighp, sigType sig_type, const char ** msg);
-#else
-int rpmReadSignature(FD_t fd, /*@out@*/ Header *header, short sig_type);
-#endif
-
 #if defined(WITH_GPG)
 #include <sys/wait.h>
 #endif
@@ -441,7 +428,7 @@ rpmAnalyze(char *path, char *nameRpm, const char *sigtarget,
 #ifdef WITH_SQL
     int id;
 #endif
-    HeaderIterator sIter;
+    (void)s;
 
     if (buffer == NULL) {
         buffer = (char *) xmlMalloc(buffer_size);
@@ -786,50 +773,8 @@ rpmAnalyze(char *path, char *nameRpm, const char *sigtarget,
             rpm->vendor = xmlStrdup(localizedStrings[LANG_UNKNOWN]);
     }
 
-    if (s == NULL)
-        rpm->extra->sigs = NULL;
-    else {
-        int tag,
-          type;
-
-        rpm->extra->max_sigs = 1;
-        rpm->extra->sigs = (rpmSigPtr *) xmlMalloc(sizeof(rpmSigPtr) *
-                                                   rpm->extra->max_sigs);
-        rpm->extra->sigs[0] = NULL;
-        rpm->extra->nb_sigs = 0;
-
-        for (sIter = headerInitIterator(s);
-             headerNextIterator(sIter, &tag, &type, (void *) &p, &count);) {
-            if ((tag != RPMSIGTAG_MD5) && (tag != RPMSIGTAG_PGP)
-                && (tag != RPMSIGTAG_GPG))
-                continue;
-            if (rpm->extra->nb_sigs >= rpm->extra->max_sigs) {
-                rpm->extra->max_sigs *= 2;
-                rpm->extra->sigs =
-                    (rpmSigPtr *) xmlRealloc(rpm->extra->sigs,
-                                             sizeof(rpmSigPtr) *
-                                             rpm->extra->max_sigs);
-                if (rpm->extra->sigs == NULL) {
-                    fprintf(stderr, "cannot re-allocate %d bytes: %s\n",
-                            rpm->extra->max_sigs, strerror(errno));
-                    exit(1);
-                }
-            }
-
-            rpm->extra->sigs[rpm->extra->nb_sigs] =
-                (rpmSigPtr) xmlMalloc(sizeof(rpmSig));
-            rpm->extra->sigs[rpm->extra->nb_sigs]->tag = tag;
-            rpm->extra->sigs[rpm->extra->nb_sigs]->type = type;
-            rpm->extra->sigs[rpm->extra->nb_sigs]->size = count;
-            rpm->extra->sigs[rpm->extra->nb_sigs]->sig = xmlMalloc(count);
-            memcpy(rpm->extra->sigs[rpm->extra->nb_sigs]->sig, p, count);
-#if defined(WITH_GPG)
-            rpm->extra->sigs[rpm->extra->nb_sigs]->resolve = NULL;
-#endif
-            rpm->extra->nb_sigs++;
-            ENTRY_CLEANUP(p);
-        }
-    }
+    /* Signature metadata is not exposed by the old API on RPM 6. */
+    rpm->extra->sigs = NULL;
 
     rpm->filename = xmlStrdup(nameRpm);
 
@@ -1092,9 +1037,6 @@ rpmOpen(char *nameRpm, rpmDirPtr dir, rpmSubdirPtr tree)
     int rc;
     Header h = NULL;
     Header s = NULL;
-#ifndef HAVE_RPM_RPMLEGACY_H
-    struct rpmlead lead;
-#endif
     int isSource;
     char buffer[500];
     struct stat buf;
@@ -1126,120 +1068,29 @@ rpmOpen(char *nameRpm, rpmDirPtr dir, rpmSubdirPtr tree)
 
     stat(buffer, &buf);
 
-    /* read the RPM header */
-#if defined(_RPMVSF_NODIGESTS)
-    {	rpmts ts = rpmtsCreate();
-	/* do no verifications except the SHA1 header */
-	/* for performance reasons (see redhat bugzilla #83320) */
-	rpmtsSetVSFlags(ts, ~RPMVSF_NOSHA1HEADER);
-	rc = rpmReadPackageFile(ts, fd, buffer, &h);
-	ts = rpmtsFree(ts);
-    }
-#else
-    rc = rpmReadPackageHeader(fd, &h, &isSource, NULL, NULL);
-#endif
-    switch (rc) {
-        case 0:
-            if (!h) {
-                fprintf(stderr,
-                        "old format source packages cannot be queried\n");
-                Fclose(fd);
-                return (NULL);
-            }
-	    isSource = (headerIsEntry(h, RPMTAG_SOURCEPACKAGE) ? 1 : 0);
-            break;
-        case 1:
-            fprintf(stderr, "%s does not appear to be a RPM package\n",
-                    nameRpm);
+    /* rpm 6 verifies digest data. This is read-only indexing, not trust enforcement:
+     * skip signatures so third-party RPM repositories can be indexed. */
+    {
+        rpmts ts = rpmtsCreate();
+        if (ts == NULL) {
             Fclose(fd);
-            return (NULL);
-        case 2:
-            fprintf(stderr, "query of %s failed\n", nameRpm);
-            Fclose(fd);
-            return (NULL);
-        case 4:
-	    fprintf(stderr, "%s: Error %d Found and Ignored\n", nameRpm, rc);
-	    if (!h) {
-		fprintf(stderr,
-			"packages cannot be queried\n");
-		Fclose(fd);
-		return (NULL);
-	    }
-	    isSource = (headerIsEntry(h, RPMTAG_SOURCEPACKAGE) ? 1 : 0);
-	    break;
-        default:
-            fprintf(stderr, "rpmReadPackageHeader(%s): unknown error %d\n",
-                    nameRpm, rc);
-            Fclose(fd);
-            return (NULL);
-     }
-
-
-#ifdef HAVE_RPM_RPMLEGACY_H
-    // XXX  phanecak: for now I do not know how to read signatures with rpm.org 4.6 or later
-#else	// ifdef HAVE_RPM_RPMLEGACY_H
-    /* read the RPM signature */
-    if (readLead(fd, &lead)) {
-        fprintf(stderr, "readLead failed\n");
-        fdClose(fd);
-        return (NULL);
+            return NULL;
+        }
+        rpmtsSetVSFlags(ts, RPMVSF_NOOPENPGP | RPMVSF_NORSAHEADER |
+                            RPMVSF_NODSAHEADER | RPMVSF_NORSA | RPMVSF_NODSA |
+                            RPMVSF_NOPAYLOAD);
+        rc = rpmReadPackageFile(ts, fd, buffer, &h);
+        rpmtsFree(ts);
     }
-    switch (lead.major) {
-        case 1:
-            fprintf(stderr, "no signature available (v1.0 RPM) in %s\n",
-                    nameRpm);
-            break;
-        default:
-#ifdef HAVE_RPM42
-            if (rpmReadSignature(fd, &s, lead.signature_type, NULL)) {
-#else
-            if (rpmReadSignature(fd, &s, lead.signature_type)) {
-#endif
-                fprintf(stderr, "rpmReadSignature failed\n");
-                fdClose(fd);
-                return (NULL);
-            }
-            if (!s) {
-                fprintf(stderr, "no signature available in %s\n", nameRpm);
-                fdClose(fd);
-                return (NULL);
-            }
-#if defined(WITH_GPG)
-            /* open temp file for writing */
-            sigtarget = xmlMalloc(30);
-            strcpy(sigtarget, "/tmp/rpm2html.date.XXXXXX");
-            sigtarget = mktemp(sigtarget);
-            ofd = Fopen(sigtarget, "w.ufdio");
-            if (ofd == NULL || Ferror(ofd)) {
-                fprintf(stderr, "Fopen of %s failed: %s\n", sigtarget,
-                        Fstrerror(ofd));
-                xmlFree(sigtarget);
-                sigtarget = NULL;
-            }
-
-            /* write the header and archive to a temp file */
-            while ((count =
-                    Fread(stbuffer, sizeof(stbuffer[0]), sizeof(stbuffer),
-                          fd)) > 0) {
-                if (Fwrite(stbuffer, sizeof(stbuffer[0]), count, ofd) < 0) {
-                    fprintf(stderr, "%s: Fwrite failed: %s\n", sigtarget,
-                            Fstrerror(ofd));
-                    xmlFree(sigtarget);
-                    sigtarget = NULL;
-                }
-            }
-            if (count < 0) {
-                fprintf(stderr, "%s: Fread failed: %s\n", buffer,
-                        Fstrerror(fd));
-                xmlFree(sigtarget);
-                sigtarget = NULL;
-            }
-
-            Fclose(ofd);
-#endif
-            break;
+    if (rc != RPMRC_OK || h == NULL) {
+        fprintf(stderr, "Cannot read RPM header from %s (rpmRC=%d)\n",
+                buffer, rc);
+        Fclose(fd);
+        if (h != NULL)
+            headerFree(h);
+        return NULL;
     }
-#endif	// ifdef HAVE_RPM_RPMLEGACY_H
+    isSource = headerIsSource(h);
 
     /* close the descriptor */
     Fclose(fd);

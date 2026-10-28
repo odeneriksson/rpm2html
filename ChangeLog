@@ -1,5 +1,19 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rpmopen.c: Read RPM package headers through rpmtsCreate() and
+	  rpmReadPackageFile(), handling unsuccessful reads and releasing
+	  the transaction and file descriptor on error.
+	* rpmopen.c: Determine source package status with headerIsSource()
+	  and remove obsolete RPM lead and signature-reading declarations.
+	* rpmopen.c: Remove the legacy signature header iterator and
+	  associated extraction code; initialize the signature list to
+	  NULL because the old signature API is unavailable.
+	* rpmopen.c: Configure RPM verification flags for read-only index
+	  generation, skipping signature checks; this does not verify RPM
+	  authenticity and must not be treated as a security check.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rpmdata.h: Remove the RPM 4 rpmlegacy.h compatibility include
 	  and use standard int32_t for stored RPM size metadata.
 	* rpmopen.c: Introduce an rpmtd-based compatibility helper for
