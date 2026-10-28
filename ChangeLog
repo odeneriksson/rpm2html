@@ -1,5 +1,12 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rpmopen.c (rpmDirScanOneDir): Remove the unused cur variable and
+	call the RPM database and directory scanners directly.
+	(rpmDirScanOneDist): Likewise. Keep the scanner calls and their
+	side effects unchanged.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rpmopen.c (checkResourceName, checkGroupName, checkVersionName):
 	Remove unused base pointers left after the old length checks were
 	commented out.  Leave name validation behavior unchanged.

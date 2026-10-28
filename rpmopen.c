@@ -1350,7 +1350,6 @@ void
 rpmDirScanOneDir(const char *directory)
 {
     rpmDirPtr dir;
-    rpmDataPtr cur;
 
     /*
      * first try to find the distrib
@@ -1373,8 +1372,6 @@ rpmDirScanOneDir(const char *directory)
      * Allocate a directory tree.
      */
     dirTree = rpmNewSubdir(NULL, "", "", "", NULL, 1);
-
-    cur = NULL;
 
     /*
      * Override default setting.
@@ -1400,7 +1397,7 @@ rpmDirScanOneDir(const char *directory)
         fprintf(stderr, "?!? rpmDir without directory ?!? disabled !\n");
     } else if (!strncmp(dir->rpmdir, "localbase", 9)) {
         /* Scan the local RPM database instead of a directory */
-        cur = rpmBaseScan(dir);
+        rpmBaseScan(dir);
     } else if (dir->ftp == NULL) {
         fprintf(stderr, "Directory %s disabled : no ftp field\n",
                 dir->rpmdir);
@@ -1410,7 +1407,7 @@ rpmDirScanOneDir(const char *directory)
 #endif
         if (rpm2htmlVerbose)
             printf("Scanning directory %s for RPMs\n", dir->rpmdir);
-        cur = rpmDirScan(dir, dirTree);
+        rpmDirScan(dir, dirTree);
     }
 }
 
@@ -1423,7 +1420,6 @@ void
 rpmDirScanOneDist(const char *dist)
 {
     rpmDirPtr dir;
-    rpmDataPtr cur;
 
     /*
      * first try to find the distrib
@@ -1463,8 +1459,6 @@ rpmDirScanOneDist(const char *dist)
      */
     dirTree = rpmNewSubdir(NULL, "", "", "", NULL, 1);
 
-    cur = NULL;
-
     /*
      * Override default setting.
      */
@@ -1489,7 +1483,7 @@ rpmDirScanOneDist(const char *dist)
         fprintf(stderr, "?!? rpmDir without directory ?!? disabled !\n");
     } else if (!strncmp(dir->rpmdir, "localbase", 9)) {
         /* Scan the local RPM database instead of a directory */
-        cur = rpmBaseScan(dir);
+        rpmBaseScan(dir);
     } else if (dir->ftp == NULL) {
         fprintf(stderr, "Directory %s disabled : no ftp field\n",
                 dir->rpmdir);
@@ -1499,7 +1493,7 @@ rpmDirScanOneDist(const char *dist)
 #endif
         if (rpm2htmlVerbose)
             printf("Scanning directory %s for RPMs\n", dir->rpmdir);
-        cur = rpmDirScan(dir, dirTree);
+        rpmDirScan(dir, dirTree);
     }
 
     if (dir->root != NULL) {
