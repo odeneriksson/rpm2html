@@ -29,6 +29,7 @@
 #include <fcntl.h>
 #endif
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #ifdef HAVE_UNISTD_H
@@ -51,6 +52,26 @@
 #error You really need snprintf ...
 #endif
 static int nb_removed_files = 0;
+
+/* Build a complete path; never use a truncated name for file cleanup. */
+static char *rpmCleanupPath(const char *dir, const char *filename) {
+    size_t dirlen = strlen(dir);
+    size_t filelen = strlen(filename);
+    char *path;
+
+    if (dirlen > SIZE_MAX - 2 || filelen > SIZE_MAX - dirlen - 2) {
+        errno = ENAMETOOLONG;
+        return NULL;
+    }
+    path = malloc(dirlen + filelen + 2);
+    if (path == NULL)
+        return NULL;
+
+    memcpy(path, dir, dirlen);
+    path[dirlen] = '/';
+    memcpy(path + dirlen + 1, filename, filelen + 1);
+    return path;
+}
 
 /*
  * Cleanup the global varibales of this module
@@ -221,7 +242,7 @@ static void rpmOneFileCleanup(char *file) {
  */
 static void rpmOneDirCleanup(char *dir) {
     char *filename;
-    char path[2000];
+    char *path;
     struct stat buf;
     int len;
     DIR *d;
@@ -240,13 +261,19 @@ static void rpmOneDirCleanup(char *dir) {
 	    /*
 	     * Compute the full path
 	     */
-	    snprintf(path, sizeof(path), "%s/%s", dir, filename);
+	    path = rpmCleanupPath(dir, filename);
+	    if (path == NULL) {
+	        fprintf(stderr, "Couldn't build cleanup path %s/%s: %s\n",
+	                dir, filename, strerror(errno));
+	        continue;
+	    }
 
 	    /*
 	     * Stat() the file to detect directory and symlimks
 	     */
 	    if (lstat(path, &buf) != 0) {
 	        fprintf(stderr, "rpmOneDirCleanup: Couldn't stat(%s)\n", path);
+		free(path);
 		continue;
 	    }
 
@@ -258,6 +285,7 @@ static void rpmOneDirCleanup(char *dir) {
 		    fprintf(stderr, "Cleaning: removing symlink %s\n", path);
 		unlink(path);
 		nb_removed_files++;
+	        free(path);
 	        continue;
 	    }
 
@@ -276,6 +304,7 @@ static void rpmOneDirCleanup(char *dir) {
 		    rpmOneDirCleanup(path);
 		}
 	    }
+	    free(path);
 	}
     }
     closedir(d);
@@ -433,7 +462,7 @@ static void rpmOneResourceCleanup(char *file) {
 
 static void rpmResourcesCleanup(char *dir) {
     char *filename;
-    char path[2000];
+    char *path;
     struct stat buf;
     int len;
     DIR *d;
@@ -452,7 +481,12 @@ static void rpmResourcesCleanup(char *dir) {
 	    /*
 	     * Compute the full path
 	     */
-	    snprintf(path, sizeof(path), "%s/%s", dir, filename);
+	    path = rpmCleanupPath(dir, filename);
+	    if (path == NULL) {
+	        fprintf(stderr, "Couldn't build cleanup path %s/%s: %s\n",
+	                dir, filename, strerror(errno));
+	        continue;
+	    }
 
 	    /*
 	     * Stat() the file to detect directory and symlimks
@@ -461,6 +495,7 @@ static void rpmResourcesCleanup(char *dir) {
 	        fprintf(stderr, "Couldn't stat(%s)\n", path);
 		unlink(path);
 		nb_removed_files++;
+		free(path);
 		continue;
 	    }
 
@@ -472,6 +507,7 @@ static void rpmResourcesCleanup(char *dir) {
 		    fprintf(stderr, "Cleaning: removing symlink %s\n", path);
 		unlink(path);
 		nb_removed_files++;
+	        free(path);
 	        continue;
 	    }
 
@@ -496,6 +532,7 @@ static void rpmResourcesCleanup(char *dir) {
 		    }
 		}
 	    }
+	    free(path);
 	}
     }
     closedir(d);
@@ -507,7 +544,7 @@ static void rpmResourcesCleanup(char *dir) {
 
 void rpmDirCleanupAll(void) {
     char *filename;
-    char path[2000];
+    char *path;
     struct stat buf;
     int len;
     DIR *d;
@@ -534,13 +571,19 @@ void rpmDirCleanupAll(void) {
 	    /*
 	     * Compute the full path
 	     */
-	    snprintf(path, sizeof(path), "%s/%s", rpm2html_rdf_dir, filename);
+	    path = rpmCleanupPath(rpm2html_rdf_dir, filename);
+	    if (path == NULL) {
+	        fprintf(stderr, "Couldn't build cleanup path %s/%s: %s\n",
+	                rpm2html_rdf_dir, filename, strerror(errno));
+	        continue;
+	    }
 
 	    /*
 	     * Stat() the file to detect directory and symlimks
 	     */
 	    if (lstat(path, &buf) != 0) {
 	        fprintf(stderr, "rpmDirCleanupAll: Couldn't stat(%s)\n", path);
+		free(path);
 		continue;
 	    }
 
@@ -552,6 +595,7 @@ void rpmDirCleanupAll(void) {
 		    fprintf(stderr, "Cleaning: removing symlink %s\n", path);
 		unlink(path);
 		nb_removed_files++;
+	        free(path);
 	        continue;
 	    }
 
@@ -581,9 +625,11 @@ void rpmDirCleanupAll(void) {
 		    fprintf(stderr, "Cleaning: removing file %s\n", path);
 		unlink(path);
 		nb_removed_files++;
+	        free(path);
 	        continue;
 	    }
 
+	    free(path);
 	}
     }
     closedir(d);

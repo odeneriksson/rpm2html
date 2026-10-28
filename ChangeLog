@@ -1,5 +1,15 @@
 2026-10-28  Oden Eriksson <5888236+odeneriksson@users.noreply.github.com>
 
+	* cleanup.c (rpmCleanupPath): Add a checked, dynamically allocated
+	path builder to avoid truncating filenames during RDF cleanup.
+	(rpmOneDirCleanup, rpmResourcesCleanup, rpmDirCleanupAll): Use the
+	complete path for file checks, recursive traversal and removal.
+	Handle allocation failures and release each temporary path on all
+	branches, including early continues.  Avoid acting on a truncated
+	path and eliminate the GCC -Wformat-truncation diagnostic.
+
+2026-10-28  Oden Eriksson <5888236+odeneriksson@users.noreply.github.com>
+
 	* html.c (rpmDumpHtmlRealTreeTitle): Write breadcrumb links directly
 	to the output stream in the non-template HTML generator rather than
 	assembling them in fixed-size temporary buffers.  Use length-bounded
