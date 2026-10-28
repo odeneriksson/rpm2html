@@ -1,5 +1,14 @@
 2026-10-28  OpenAI ChatGPT
 
+	* html.c (dumpRpmHtml): Check snprintf() results when constructing
+	the output directory and reject paths that exceed the static buffer.
+	Replace three unbounded strcat() operations with a single bounded
+	snprintf() for the RPM HTML filename, checking for truncation before
+	calling needsDump() or opening the output file. Preserve filenames
+	and directory creation for paths that fit the existing buffer.
+
+2026-10-28  OpenAI ChatGPT
+
 	* html.c (buffer_size): Store the shared HTML/XML output buffer
 	capacity as size_t rather than int.
 	(nextHTMLBufferSize): New helper to check for size_t overflow

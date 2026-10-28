@@ -2249,6 +2249,8 @@ void dumpRpmHtml(rpmDataPtr rpm, rpmSubdirPtr tree) {
     int installed = dir->installbase;
     FILE *html;
     int i;
+    int dir_path_len;
+    int file_suffix_len;
 
     if (!rpm2html_dump_html) return;
 
@@ -2257,21 +2259,32 @@ void dumpRpmHtml(rpmDataPtr rpm, rpmSubdirPtr tree) {
      */
     if ((dir->subdir != NULL) && (dir->subdir[0] != '\0')) {
 	if ((rpm->subdir != NULL) && (rpm->subdir[0] != '\0'))
-	    snprintf(buf, sizeof(buf), "%s/%s/%s", dir->dir, dir->subdir,
-	            rpm->subdir);
+	    dir_path_len = snprintf(buf, sizeof(buf), "%s/%s/%s",
+	                            dir->dir, dir->subdir, rpm->subdir);
 	else
-	    snprintf(buf, sizeof(buf), "%s/%s", dir->dir, dir->subdir);
+	    dir_path_len = snprintf(buf, sizeof(buf), "%s/%s",
+	                            dir->dir, dir->subdir);
     } else {
 	if ((rpm->subdir != NULL) && (rpm->subdir[0] != '\0'))
-	    snprintf(buf, sizeof(buf), "%s/%s", dir->dir, rpm->subdir);
+	    dir_path_len = snprintf(buf, sizeof(buf), "%s/%s",
+	                            dir->dir, rpm->subdir);
 	else
-	    snprintf(buf, sizeof(buf), "%s", dir->dir);
+	    dir_path_len = snprintf(buf, sizeof(buf), "%s", dir->dir);
+    }
+
+    if (dir_path_len < 0 || (size_t) dir_path_len >= sizeof(buf)) {
+        fprintf(stderr, "RPM HTML output directory path is too long\n");
+        return;
     }
 
     createDirectory(buf);
-    strcat(buf, "/");
-    strcat(buf, rpmName(rpm));
-    strcat(buf, ".html");
+    file_suffix_len = snprintf(buf + dir_path_len, sizeof(buf) - dir_path_len,
+                               "/%s.html", rpmName(rpm));
+    if (file_suffix_len < 0 ||
+        (size_t) file_suffix_len >= sizeof(buf) - dir_path_len) {
+        fprintf(stderr, "RPM HTML output file path is too long\n");
+        return;
+    }
 
     if (!needsDump(buf, rpm->extra->stamp))
     	return;
