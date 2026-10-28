@@ -606,19 +606,19 @@ const char *convertCVE(const char *str) {
  */
 #define X(_x)   (unsigned)((_x) & 0xff)
 
-static unsigned char *sigInfoMD5 = "internal MD5: ";
+static char *sigInfoMD5 = "internal MD5: ";
 #if defined(WITH_GPG)
-static unsigned char *sigInfoGPG = "GPG:\n";
-static unsigned char *sigInfoPGP = "PGP:\n";
+static char *sigInfoGPG = "GPG:\n";
+static char *sigInfoPGP = "PGP:\n";
 #else
-static unsigned char *sigInfoGPG = "GPG";
-static unsigned char *sigInfoPGP = "PGP";
+static char *sigInfoGPG = "GPG";
+static char *sigInfoPGP = "PGP";
 #endif
-static unsigned char *sigInfoU = "unknown";
+static char *sigInfoU = "unknown";
 
-static unsigned char *sbuffer = NULL;
+static char *sbuffer = NULL;
 static int sbuffer_size = 2000;
-static unsigned char *sbuffer2 = NULL;
+static char *sbuffer2 = NULL;
 static int sbuffer2_size = 3;
 char *convertSIG(rpmSigPtr sig) {
     int n1;

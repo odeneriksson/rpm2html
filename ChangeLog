@@ -1,3 +1,11 @@
+2026-10-28  OpenAI ChatGPT
+
+	* html.c (sigInfoMD5, sigInfoGPG, sigInfoPGP, sigInfoU): Use
+	char pointers for C string literals returned by convertSIG().
+	(sbuffer, sbuffer2): Declare text buffers as char pointers to match
+	libc string functions, allocation casts and convertSIG() return type.
+	No change to signature formatting or allocated buffer sizes.
+
 2026-10-28  ChatGPT (assisted maintenance)
 
 	* html.c (buffer2): Use char * for the shared CVE-conversion output
