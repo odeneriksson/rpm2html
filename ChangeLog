@@ -1,3 +1,13 @@
+2026-10-28  Oden Eriksson <5888236+odeneriksson@users.noreply.github.com>
+
+	* html.c (cleanName): Bound writes to the static filename buffer and
+	ensure NUL termination for unusually long package metadata values.
+	(htmlFileName): Add a bounded filename formatter which reserves space
+	for the localized HTML suffix.
+	(groupName, distribName, vendorName, resourceName): Replace unsafe
+	strncpy/strncat sequences with the common filename formatter. Keep
+	existing filenames unchanged for inputs that fit in the buffer.
+
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
 	* FC44-PORT-NOTES.txt: Document prerequisites and commands for

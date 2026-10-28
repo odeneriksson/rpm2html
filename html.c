@@ -901,7 +901,7 @@ const char *cleanName (const char *name) {
     static char cbuf[500];
     char *cur = cbuf;
  
-    while (*name != '\0') {
+    while ((*name != '\0') && (cur < cbuf + sizeof(cbuf) - 1)) {
         if ((*name == '/')
 	 || (*name == ' ')
 	 || (*name == '/')
@@ -953,14 +953,30 @@ const char *escapeName (const char *name) {
 }
 
 /*
+ * Generate a bounded HTML filename, preserving the suffix for long names.
+ */
+
+static void htmlFileName(char *filename, size_t size, const char *name) {
+    const char *suffix = localizedStrings[LANG_HTML_SUFFIX];
+    size_t suffix_len = strlen(suffix);
+
+    if (suffix_len >= size) {
+        snprintf(filename, size, "%s", suffix);
+        return;
+    }
+
+    snprintf(filename, size, "%.*s%s",
+             (int)(size - suffix_len - 1), cleanName(name), suffix);
+}
+
+/*
  * Transformation function from group to filename.
  */
 
 const char *groupName(const char *group) {
     static char gbuf[500];
 
-    strncpy(gbuf, cleanName (group), 500);
-    strncat(gbuf, localizedStrings[LANG_HTML_SUFFIX], 500);
+    htmlFileName(gbuf, sizeof(gbuf), group);
     return(gbuf);
 }
 
@@ -971,8 +987,7 @@ const char *groupName(const char *group) {
 const char *distribName(const char *distrib) {
     static char dbuf[500];
 
-    strncpy(dbuf, cleanName (distrib), 500);
-    strncat(dbuf, localizedStrings[LANG_HTML_SUFFIX], 500);
+    htmlFileName(dbuf, sizeof(dbuf), distrib);
     return(dbuf);
 }
 
@@ -1049,8 +1064,7 @@ void fullPathNameNr(char *buf, int len, rpmDirPtr dir, char *subdir,
 const char *vendorName(const char *vendor) {
     static char vbuf[500];
 
-    strncpy(vbuf, cleanName (vendor), 500);
-    strncat(vbuf, localizedStrings[LANG_HTML_SUFFIX], 500);
+    htmlFileName(vbuf, sizeof(vbuf), vendor);
     return(vbuf);
 }
 
@@ -1061,8 +1075,7 @@ const char *vendorName(const char *vendor) {
 const char *resourceName(const char *resource) {
     static char rbuf[500];
 
-    strncpy(rbuf, cleanName (resource), 500);
-    strncat(rbuf, localizedStrings[LANG_HTML_SUFFIX], 500);
+    htmlFileName(rbuf, sizeof(rbuf), resource);
     return(rbuf);
 }
 
