@@ -603,7 +603,7 @@ void rpmDirCleanupAll(void) {
 	     * We shouldn't get any non-rdf file here
 	     */
 	    else if ((len >= 5) && (!strcasecmp(&filename[len - 4], ".rdf"))) {
-	        rpmOneFileCleanup(filename);
+	        rpmOneFileCleanup(path);
 	    }
 
 	    /*

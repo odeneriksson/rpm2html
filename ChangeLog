@@ -1,5 +1,14 @@
 2026-10-28  Oden Eriksson <5888236+odeneriksson@users.noreply.github.com>
 
+	* cleanup.c (rpmDirCleanupAll): Pass the complete RDF file path to
+	rpmOneFileCleanup rather than the directory entry name.  Ensure
+	that root-level RDF files are read and, when obsolete, removed
+	from the configured RDF directory instead of the process's current
+	working directory.  Reuse the full path already constructed for
+	lstat, without changing the remaining cleanup logic.
+
+2026-10-28  Oden Eriksson <5888236+odeneriksson@users.noreply.github.com>
+
 	* cleanup.c (rpmCleanupPath): Add a checked, dynamically allocated
 	path builder to avoid truncating filenames during RDF cleanup.
 	(rpmOneDirCleanup, rpmResourcesCleanup, rpmDirCleanupAll): Use the
