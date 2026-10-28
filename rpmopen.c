@@ -1285,9 +1285,8 @@ rpmBaseScan(rpmDirPtr dir)
     static char path[2000];
     rpmDataPtr ret = NULL,
       cur;
-    rpmdb db;
+    rpmts ts;
     Header h = NULL;
-    char *prefix = "/";
     rpmdbMatchIterator mi;
 
 #ifdef WITH_SQL
@@ -1321,13 +1320,17 @@ rpmBaseScan(rpmDirPtr dir)
         printf("Scanning the database of installed RPMs\n");
 
     if (dir->dbpath != NULL)
-        addMacro(NULL, "_dbpath", NULL, dir->dbpath, -7);       /* Added by A.Gibert */
+        rpmPushMacro(NULL, "_dbpath", NULL, dir->dbpath, -7);
 
-    if (rpmdbOpen(prefix, &db, O_RDONLY, 0644)) {
-        return (NULL);
+    ts = rpmtsCreate();
+    if (ts == NULL)
+        return NULL;
+    if (rpmtsOpenDB(ts, O_RDONLY) != 0) {
+        rpmtsFree(ts);
+        return NULL;
     }
 
-    mi = rpmdbInitIterator(db, RPMDBI_PACKAGES, NULL, 0);
+    mi = rpmtsInitIterator(ts, RPMDBI_PACKAGES, NULL, 0);
     while ((h = rpmdbNextIterator(mi)) != NULL) {
         cur = rpmAnalyze(NULL, NULL, NULL, h, NULL, dir, NULL, 0, 0);
         if (cur != NULL)
@@ -1335,7 +1338,8 @@ rpmBaseScan(rpmDirPtr dir)
     }
     rpmdbFreeIterator(mi);
 
-    rpmdbClose(db);
+    rpmtsCloseDB(ts);
+    rpmtsFree(ts);
 
     return (ret);
 }

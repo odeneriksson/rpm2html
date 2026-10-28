@@ -1,5 +1,16 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rpmopen.c: Replace the legacy rpmdbOpen()/rpmdbInitIterator()
+	  sequence with rpmtsCreate(), rpmtsOpenDB() and
+	  rpmtsInitIterator() for installed-package indexing.
+	* rpmopen.c: Replace addMacro() with rpmPushMacro() for a
+	  configured RPM database path.
+	* rpmopen.c: Close the RPM database and free the transaction
+	  after scanning; handle transaction creation and database-open
+	  failures without using removed RPM database APIs.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rpmopen.c: Read RPM package headers through rpmtsCreate() and
 	  rpmReadPackageFile(), handling unsuccessful reads and releasing
 	  the transaction and file descriptor on error.
