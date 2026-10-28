@@ -1,5 +1,13 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rdf.c (rpmOpenRdfFile): Pass XML attribute names as xmlChar strings
+	and explicitly convert the temporary xmlGetProp() value when passing
+	it to rpmRequAdd(), which duplicates that string before it is freed.
+	(dumpRpmRdf, dumpResRdf): Pass attribute names and values to
+	xmlSetProp() with the libxml2 string type, preserving serialized RDF.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rdf.c (rdfXmlStrdup): New file-local helper to duplicate conventional
 	C strings using libxml2 and return them as char pointers.
 	(rpmOpenRdfFile): Use rdfXmlStrdup for ten fallback metadata and RPM

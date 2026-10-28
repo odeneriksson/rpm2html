@@ -421,15 +421,15 @@ rpmDataPtr rpmOpenRdfFile(char *file) {
 		    rpm_dep_flag dep = RPM2HTML_REQ_NONE;
 		    xmlChar *reqval = NULL;
 
-		    if ((reqval = xmlGetProp(elem, "gt")) != NULL) {
+		    if ((reqval = xmlGetProp(elem, BAD_CAST "gt")) != NULL) {
 			dep = RPM2HTML_REQ_GT;
-		    } else if ((reqval = xmlGetProp(elem, "geq")) != NULL) {
+		    } else if ((reqval = xmlGetProp(elem, BAD_CAST "geq")) != NULL) {
 			dep = RPM2HTML_REQ_GEQ;
-		    } else if ((reqval = xmlGetProp(elem, "lt")) != NULL) {
+		    } else if ((reqval = xmlGetProp(elem, BAD_CAST "lt")) != NULL) {
 			dep = RPM2HTML_REQ_LT;
-		    } else if ((reqval = xmlGetProp(elem, "leq")) != NULL) {
+		    } else if ((reqval = xmlGetProp(elem, BAD_CAST "leq")) != NULL) {
 			dep = RPM2HTML_REQ_LEQ;
-		    } else if ((reqval = xmlGetProp(elem, "equ")) != NULL) {
+		    } else if ((reqval = xmlGetProp(elem, BAD_CAST "equ")) != NULL) {
 			dep = RPM2HTML_REQ_EQU;
 		    }
 
@@ -437,7 +437,7 @@ rpmDataPtr rpmOpenRdfFile(char *file) {
 		     * TODO: fix to import RDF dept to a specific version
 		     */
 		    rpm->extra->requires[i] = rpmRequAdd(value,
-			                                 reqval, dep, rpm, 0); 
+			                                 (char *) reqval, dep, rpm, 0); 
 		    i++;
 		    rpm->extra->nb_requires++;
 		    xmlFree(value);
@@ -632,7 +632,7 @@ void dumpRpmRdf(rpmDataPtr rpm, rpmSubdirPtr tree) {
 	    if (rpm->extra->resources[i]->name[0] != '/') {
 		snprintf(buf, sizeof(buf) - 1, "%sresources/%s.rdf",
 		         dotdot, rpm->extra->resources[i]->name);
-		xmlSetProp(elem, "href", buf);
+		xmlSetProp(elem, BAD_CAST "href", BAD_CAST buf);
 	    }
         }
     }
@@ -644,29 +644,29 @@ void dumpRpmRdf(rpmDataPtr rpm, rpmSubdirPtr tree) {
 	    if (rpm->extra->requires[i]->name[0] != '/') {
 		snprintf(buf, sizeof(buf) - 1, "%sresources/%s.rdf",
 		         dotdot, rpm->extra->requires[i]->name);
-		xmlSetProp(elem, "href", buf);
+		xmlSetProp(elem, BAD_CAST "href", BAD_CAST buf);
 	    }
 	    if (rpm->extra->requires[i]->version != NULL) {
 		switch (rpm->extra->requires[i]->flag) {
 		    case RPM2HTML_REQ_LT:
-			xmlSetProp(elem, "lt",
-				   rpm->extra->requires[i]->version);
+			xmlSetProp(elem, BAD_CAST "lt",
+				   BAD_CAST rpm->extra->requires[i]->version);
 			break;
 		    case RPM2HTML_REQ_LEQ:
-			xmlSetProp(elem, "leq",
-				   rpm->extra->requires[i]->version);
+			xmlSetProp(elem, BAD_CAST "leq",
+				   BAD_CAST rpm->extra->requires[i]->version);
 			break;
 		    case RPM2HTML_REQ_GT:
-			xmlSetProp(elem, "gt",
-				   rpm->extra->requires[i]->version);
+			xmlSetProp(elem, BAD_CAST "gt",
+				   BAD_CAST rpm->extra->requires[i]->version);
 			break;
 		    case RPM2HTML_REQ_GEQ:
-			xmlSetProp(elem, "geq",
-				   rpm->extra->requires[i]->version);
+			xmlSetProp(elem, BAD_CAST "geq",
+				   BAD_CAST rpm->extra->requires[i]->version);
 			break;
 		    case RPM2HTML_REQ_EQU:
-			xmlSetProp(elem, "equ",
-				   rpm->extra->requires[i]->version);
+			xmlSetProp(elem, BAD_CAST "equ",
+				   BAD_CAST rpm->extra->requires[i]->version);
 			break;
 		    case RPM2HTML_REQ_NONE:
 			break;
@@ -847,7 +847,7 @@ void dumpResRdf(rpmRessPtr res) {
 	    else
 		snprintf(buf, sizeof(buf), "../%s.rdf", rpmName(rpm));
 	}
-	xmlSetProp(desc, "href", buf);
+	xmlSetProp(desc, BAD_CAST "href", BAD_CAST buf);
 	rdfSetValue(desc, "Name", rpmNs, rpm->name);
 	rdfSetValue(desc, "Version", rpmNs, rpm->version);
 	rdfSetValue(desc, "Release", rpmNs, rpm->release);
