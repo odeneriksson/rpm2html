@@ -1,3 +1,11 @@
+2026-10-28  ChatGPT (assisted maintenance)
+
+	* html.c (buffer): Use char * for the shared HTML/XML output buffer.
+	(convertHTML, convertXML): Use char * for cursor and buffer end
+	pointers, matching string-library APIs and the existing char * return
+	type. Keep the input byte variable unsigned char; do not alter output,
+	buffer growth, allocation or shared-buffer semantics.
+
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
 	* rpmopen.c (rpmAnalyze): Use the existing rpmopenXmlStrdup()

@@ -369,11 +369,11 @@ void destroyTemplateEngine() {
  * The string returned is a shared location.
  */
 
-static unsigned char *buffer = NULL;
+static char *buffer = NULL;
 static int buffer_size = 2000;
 char *convertHTML(const char *str) {
 
-    unsigned char *cur, *end;
+    char *cur, *end;
     unsigned char c;
 
     if (buffer == NULL) {
@@ -418,7 +418,7 @@ char *convertHTML(const char *str) {
 
 char *convertXML(const char *str) {
 
-    unsigned char *cur, *end;
+    char *cur, *end;
     unsigned char c;
 
     if (buffer == NULL) {
