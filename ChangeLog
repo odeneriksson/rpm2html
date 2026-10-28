@@ -1,5 +1,14 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rdf_api.c (rdfGetDescriptionId, rdfGetDescriptionAbout,
+	rdfGetElementResource, rdfGetValue, rdfElemGetValue,
+	rdfElemGetPropertyName): Use libxml2-compatible types when reading
+	XML attribute names, namespace prefix lengths, node text, and
+	element names.  Preserve char * return interfaces and allocation
+	ownership (xmlFree for libxml2 results, free for strdup results).
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rdf_api.c (rdfRead, rdfFirstDescription, rdfNextDescription,
 	rdfGetValue, rdfSetValue, rdfRemoveProperty, rdfElemGetType):
 	Use xmlStrEqual() for libxml2 node-name comparisons instead of

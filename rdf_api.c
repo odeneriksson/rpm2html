@@ -232,7 +232,7 @@ rdfDescription rdfAddDescription(rdfSchema schema, const char *id,
 char *rdfGetDescriptionId(rdfSchema schema, rdfDescription desc) {
     char *res;
 
-    res = (char *) xmlGetProp(desc, "ID");
+    res = (char *) xmlGetProp(desc, BAD_CAST "ID");
     return(res);
 }
 
@@ -241,18 +241,18 @@ char *rdfGetDescriptionAbout(rdfSchema schema, rdfDescription desc) {
     rdfNamespace ns;
     char *buf;
 
-    res = (char *) xmlGetProp(desc, "about");
+    res = (char *) xmlGetProp(desc, BAD_CAST "about");
     if (res != NULL) return(res);
 
     /*
      * Maintain compatibility with old "RDF:HREF"
      */
-    res = (char *) xmlGetProp(desc, "HREF");
+    res = (char *) xmlGetProp(desc, BAD_CAST "HREF");
     if (res != NULL) return(res);
     ns = rdfGetRdfNamespace(schema);
-    buf = (char *) xmlMalloc(strlen(ns->prefix) + 10);
+    buf = (char *) xmlMalloc(xmlStrlen(ns->prefix) + 10);
     sprintf(buf, "%s:HREF", ns->prefix);
-    res = (char *) xmlGetProp(desc, buf);
+    res = (char *) xmlGetProp(desc, BAD_CAST buf);
     xmlFree(buf);
     return(res);
 }
@@ -263,7 +263,7 @@ char *rdfGetDescriptionAbout(rdfSchema schema, rdfDescription desc) {
 char *rdfGetElementResource(rdfSchema schema, rdfElement elem) {
     char *res;
 
-    res = (char *) xmlGetProp(elem, "resource");
+    res = (char *) xmlGetProp(elem, BAD_CAST "resource");
     return(res);
 }
 
@@ -307,7 +307,7 @@ int rdfGetValue(rdfDescription desc, const char *property,
 	     * Found a perfect match, return it !
 	     */
 	    if (value != NULL) {
-		*value = xmlNodeListGetString(desc->doc, list->xmlChildrenNode, 1);
+		*value = (char *) xmlNodeListGetString(desc->doc, list->xmlChildrenNode, 1);
             }
 	    if (elem != NULL) {
 		*elem = list->xmlChildrenNode;
@@ -336,7 +336,7 @@ int rdfGetValue(rdfDescription desc, const char *property,
     }
     if (best != NULL) {
 	if (value != NULL) {
-	    *value = xmlNodeListGetString(desc->doc, best->xmlChildrenNode, 1);
+	    *value = (char *) xmlNodeListGetString(desc->doc, best->xmlChildrenNode, 1);
 	}
 	if (elem != NULL) *elem = best->xmlChildrenNode;
 	if (xmlStrEqual(best->name, BAD_CAST "Bag")) return(RDF_BAG);
@@ -483,10 +483,10 @@ int rdfElemGetType(rdfElement elem) {
 }
 
 char *rdfElemGetValue(rdfElement elem) {
-    return(xmlNodeListGetString(elem->doc, elem->xmlChildrenNode, 1));
+    return((char *) xmlNodeListGetString(elem->doc, elem->xmlChildrenNode, 1));
 }
 char *rdfElemGetPropertyName(rdfElement elem) {
-    return(strdup(elem->name));
+    return(strdup((const char *) elem->name));
 }
 rdfNamespace rdfElemGetNamespace(rdfElement elem) {
     return(elem->ns);
