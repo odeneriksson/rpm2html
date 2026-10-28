@@ -124,6 +124,8 @@ void create_gz_source(char *filename) {
     fprintf(result, "    return((char *) buffer);\n}\n");
 
     fclose(result);
+    free(output);
+    free(input);
 }
 
 void message(char *fmt, ...)
@@ -165,6 +167,7 @@ int main(int argc, char **argv)
 
 	while (--argc > 0) {
 		char *name = *++argv;
+                char *generated_name = NULL;
                 int path_len;
 
                 if (name[0] == '-') {
@@ -211,9 +214,12 @@ int main(int argc, char **argv)
 		/*
 		 * do the work !
 		 */
-		if (data_name == NULL)
-		    data_name = get_data_name(name);
+		if (data_name == NULL) {
+		    generated_name = get_data_name(name);
+		    data_name = generated_name;
+		}
 		create_gz_source(fullname);
+		free(generated_name);
 		/* Apply an explicit -n name only to the next input file. */
 		data_name = NULL;
 

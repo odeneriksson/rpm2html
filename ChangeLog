@@ -1,5 +1,13 @@
 2026-10-29  OpenAI ChatGPT
 
+	* compressor.c (create_gz_source): Free the input and compressed
+	output buffers once the generated C header has been written.
+	(main): Free only automatically allocated data names after each
+	file, leaving caller-owned -n arguments untouched.  Keep the
+	per-file name reset introduced in the preceding change.
+
+2026-10-29  OpenAI ChatGPT
+
 	* compressor.c (main): Honor an explicit -n data_name when
 	processing the next input file instead of overwriting it with a
 	generated identifier. Reset the selection after each file so
