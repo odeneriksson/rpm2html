@@ -463,17 +463,17 @@ char *convertXML(const char *str) {
  * Convert CAN-yyyy-nnnn and CVE-yyyy-nnnn to hyperlinks
  * The string returned is a shared location.
  */
-static unsigned char *buffer2 = NULL;
+static char *buffer2 = NULL;
 static int buffer2_size = 2000;
 enum STATE { C = 1, CV = 2, CVE = 3, CA = 4, CAN = 5,
              DIGIT1 = 6, DIGIT2 = 7 };
 const char *convertCVE(const char *str) {
-    unsigned char *cur, *end;
+    char *cur, *end;
     unsigned char c;
     int state = 0;
     int count = 0;
-    unsigned char parse[14]; /* "CVE-yyyy-nnnn" */
-    unsigned char *p = parse;
+    char parse[14]; /* "CVE-yyyy-nnnn" */
+    char *p = parse;
 
     if (rpm2html_cve_linking == 0)
         return str;
@@ -568,7 +568,7 @@ const char *convertCVE(const char *str) {
 		if (count == 4) {
 		    *p++ = c;
 		    if (state == DIGIT2) {
-			unsigned char url[90];
+			char url[90];
 			*p = '\0';
 			sprintf(url, "<a href=\"http://cve.mitre.org/cgi-bin/cvename.cgi?"
 			             "name=%s\">%s</a>", parse, parse);

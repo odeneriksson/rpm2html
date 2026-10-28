@@ -1,5 +1,14 @@
 2026-10-28  ChatGPT (assisted maintenance)
 
+	* html.c (buffer2): Use char * for the shared CVE-conversion output
+	buffer, consistent with the const char * return type.
+	(convertCVE): Use char * for output cursor, end and temporary URL,
+	and for the ASCII identifier string and its cursor. Keep the input
+	character unsigned for byte classification. Preserve the original
+	CVE/CAN matching rules, URL formatting, buffer growth and cleanup.
+
+2026-10-28  ChatGPT (assisted maintenance)
+
 	* html.c (buffer): Use char * for the shared HTML/XML output buffer.
 	(convertHTML, convertXML): Use char * for cursor and buffer end
 	pointers, matching string-library APIs and the existing char * return
