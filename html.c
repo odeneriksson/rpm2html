@@ -476,6 +476,15 @@ static size_t nextCVEBufferSize(size_t current) {
     return current * 2;
 }
 
+/* Safely add output lengths for variable-length CVE identifiers. */
+static size_t addCVELength(size_t a, size_t b) {
+    if (b > SIZE_MAX - a) {
+        fputs("convertCVE: output length overflow\n", stderr);
+        exit(1);
+    }
+    return a + b;
+}
+
 enum STATE { C = 1, CV = 2, CVE = 3, CA = 4, CAN = 5,
              DIGIT1 = 6, DIGIT2 = 7 };
 const char *convertCVE(const char *str) {
@@ -579,6 +588,55 @@ const char *convertCVE(const char *str) {
 		if (count == 4) {
 		    *p++ = c;
 		    if (state == DIGIT2) {
+                        /* The original parser recognizes four sequence digits.
+                         * Extend CVE IDs to include all following digits, while
+                         * leaving legacy four-digit and CAN links untouched. */
+                        if (parse[1] == 'V' && *str >= '0' && *str <= '9') {
+                            static const char prefix[] =
+                                "<a href=\"http://cve.mitre.org/cgi-bin/cvename.cgi?name=";
+                            static const char middle[] = "\">";
+                            static const char suffix[] = "</a>";
+                            size_t extra = strspn(str, "0123456789");
+                            size_t idlen = (size_t) (p - parse);
+                            size_t offset = (size_t) (cur - buffer2);
+                            size_t needed = addCVELength(offset, 100);
+                            needed = addCVELength(needed, sizeof(prefix) - 1);
+                            needed = addCVELength(needed, sizeof(middle) - 1);
+                            needed = addCVELength(needed, sizeof(suffix) - 1);
+                            needed = addCVELength(needed, idlen);
+                            needed = addCVELength(needed, extra);
+                            needed = addCVELength(needed, idlen);
+                            needed = addCVELength(needed, extra);
+
+                            while (buffer2_size < needed) {
+                                buffer2_size = nextCVEBufferSize(buffer2_size);
+                                buffer2 = (char *) xmlRealloc(buffer2, buffer2_size);
+                                if (buffer2 == NULL) {
+                                    perror("xmlRealloc failed");
+                                    exit(1);
+                                }
+                            }
+                            cur = &buffer2[offset];
+                            end = &buffer2[buffer2_size - 100];
+                            memcpy(cur, prefix, sizeof(prefix) - 1);
+                            cur += sizeof(prefix) - 1;
+                            memcpy(cur, parse, idlen);
+                            cur += idlen;
+                            memcpy(cur, str, extra);
+                            cur += extra;
+                            memcpy(cur, middle, sizeof(middle) - 1);
+                            cur += sizeof(middle) - 1;
+                            memcpy(cur, parse, idlen);
+                            cur += idlen;
+                            memcpy(cur, str, extra);
+                            cur += extra;
+                            memcpy(cur, suffix, sizeof(suffix) - 1);
+                            cur += sizeof(suffix) - 1;
+                            str += extra;
+                            p = parse;
+                            state = 0;
+                            continue;
+                        }
 			char url[90];
 			*p = '\0';
 			sprintf(url, "<a href=\"http://cve.mitre.org/cgi-bin/cvename.cgi?"

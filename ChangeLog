@@ -1,5 +1,13 @@
 2026-10-28  OpenAI ChatGPT
 
+	* html.c (addCVELength): Add checked size_t length calculation for
+	variable-length CVE links.
+	(convertCVE): Recognize CVE sequence numbers longer than four
+	digits and emit the complete identifier in both the link URL and
+	its text. Keep the original four-digit CVE and CAN handling.
+
+2026-10-28  OpenAI ChatGPT
+
 	* html.c (buffer2_size): Track CVE output buffer capacity using
 	size_t instead of int.
 	(nextCVEBufferSize): Check for size_t overflow before doubling
