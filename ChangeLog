@@ -1,5 +1,11 @@
 2026-10-28  OpenAI ChatGPT
 
+	* html.c (convertCVE): Copy a partially matched CVE/CAN identifier
+	to the output when the input ends before the full identifier is
+	recognized. Do not silently truncate changelog text at end-of-input.
+
+2026-10-28  OpenAI ChatGPT
+
 	* html.c (sigReserve): Grow the shared signature text buffer as
 	needed, retaining the original allocation on realloc failure.
 	(sigSetResolved): Add length-checked concatenation of resolved GPG

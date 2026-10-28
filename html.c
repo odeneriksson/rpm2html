@@ -597,6 +597,12 @@ const char *convertCVE(const char *str) {
 	state = 0;
 	*(cur++) = c;
     }
+    /* Retain an incomplete CVE/CAN identifier at the end of input. */
+    if (p != parse) {
+        size_t pending = (size_t) (p - parse);
+        memcpy(cur, parse, pending);
+        cur += pending;
+    }
     *cur = '\0';
     return(buffer2);
 }
