@@ -36,6 +36,7 @@ void create_gz_source(char *filename) {
     struct stat st;
     int fd;
     FILE *result;
+    const char *output_path = data_file;
     int i;
     
     /*
@@ -81,13 +82,17 @@ void create_gz_source(char *filename) {
     /*
      * save the whole stuff as a C source file.
      */
-    if (data_file == NULL) {
-        sprintf(outputfile, "%s.h", filename);
-	data_file = &outputfile[0];
+    if (output_path == NULL) {
+        int len = snprintf(outputfile, sizeof(outputfile), "%s.h", filename);
+        if (len < 0 || (size_t) len >= sizeof(outputfile)) {
+            fprintf(stderr, "output header filename too long: %s\n", filename);
+            exit(1);
+        }
+        output_path = outputfile;
     }
-    result = fopen(data_file, "w");
+    result = fopen(output_path, "w");
     if (result == NULL) {
-        fprintf(stderr, "fopen(%s)", data_file);
+        fprintf(stderr, "fopen(%s)", output_path);
 	perror("failed");
 	exit(1);
     }

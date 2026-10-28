@@ -1,3 +1,13 @@
+2026-10-29  OpenAI ChatGPT
+
+	* compressor.c (create_gz_source): Keep the automatically derived
+	output header pathname local to each call rather than storing a
+	pointer to the function's stack buffer in data_file. This fixes a
+	stack-use-after-return when multiple input files are processed by
+	one invocation of compressor. Use snprintf() and reject truncated
+	header pathnames instead of overflowing outputfile[512]. Preserve
+	explicit -o output paths and the generated C header format.
+
 2026-10-28  OpenAI ChatGPT
 
 	* html.c (dumpRpmHtml): Check snprintf() results when constructing
