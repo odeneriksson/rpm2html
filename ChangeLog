@@ -1,5 +1,13 @@
 2026-10-28  Oden Eriksson <5888236+odeneriksson@users.noreply.github.com>
 
+	* rpmdata.c (rpmAddRealFile): Reject RPM file paths which do not
+	fit into the fixed-size path buffer.  Replace strncpy with a
+	length-checked memcpy including the terminating NUL byte to
+	prevent unterminated path strings when processing long RPM file
+	names.  Report rejected paths in verbose mode.
+
+2026-10-28  Oden Eriksson <5888236+odeneriksson@users.noreply.github.com>
+
 	* rpmdata.c (rpmNewSubdir): Initialize the entire dynamically
 	allocated subdirectory pointer table rather than only one pointer.
 	Use the allocated element count and the pointed-to element size

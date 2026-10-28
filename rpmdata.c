@@ -1103,12 +1103,19 @@ void rpmAddRealFile(rpmRealDirPtr root, const char *file, rpmDataPtr rpm) {
     static char path[2000];
     char *filename;
     char *cur, save;
+    size_t file_len;
     rpmRealDirPtr curDir = root;
 
     if (root == NULL) return;
     if (file == NULL) return;
     if (rpm == NULL) return;
-    strncpy(path, file, sizeof(path));
+    file_len = strlen(file);
+    if (file_len >= sizeof(path)) {
+        if (rpm2htmlVerbose > 1)
+            fprintf(stderr, "rpmAddRealFile : %s path too long\n", file);
+        return;
+    }
+    memcpy(path, file, file_len + 1);
     filename = &path[0];
     if (*filename != '/') {
         if (rpm2htmlVerbose > 1) 
