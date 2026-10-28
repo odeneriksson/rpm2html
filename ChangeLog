@@ -1,5 +1,12 @@
 2026-10-28  Oden Eriksson <5888236+odeneriksson@users.noreply.github.com>
 
+	* html.c (convertCVE): Return a const-qualified string pointer to
+	preserve the input string's constness when CVE hyperlink generation
+	is disabled.  The generated hyperlink buffer and existing callers
+	are unaffected.  Fix the -Wdiscarded-qualifiers compiler warning.
+
+2026-10-28  Oden Eriksson <5888236+odeneriksson@users.noreply.github.com>
+
 	* html.c (cleanName): Bound writes to the static filename buffer and
 	ensure NUL termination for unusually long package metadata values.
 	(htmlFileName): Add a bounded filename formatter which reserves space

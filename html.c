@@ -467,7 +467,7 @@ static unsigned char *buffer2 = NULL;
 static int buffer2_size = 2000;
 enum STATE { C = 1, CV = 2, CVE = 3, CA = 4, CAN = 5,
              DIGIT1 = 6, DIGIT2 = 7 };
-char *convertCVE(const char *str) {
+const char *convertCVE(const char *str) {
     unsigned char *cur, *end;
     unsigned char c;
     int state = 0;
