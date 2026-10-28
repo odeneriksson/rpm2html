@@ -68,7 +68,7 @@ rdfSchema rdfRead(const char *filename) {
         xmlFreeDoc(res);
 	return(NULL);
     }
-    if (strcmp(root->name, "RDF")) {
+    if (!xmlStrEqual(root->name, BAD_CAST "RDF")) {
 	fprintf(stderr, "rdfRead %s: not an RDF file\n", filename);
         xmlFreeDoc(res);
 	return(NULL);
@@ -183,7 +183,7 @@ rdfDescription rdfFirstDescription(rdfSchema schema) {
     if (tree == NULL) return(NULL);
     tree = tree->xmlChildrenNode;
     while (tree != NULL) {
-        if ((tree->ns == rdfNs) && (!strcmp(tree->name, "Description")))
+        if ((tree->ns == rdfNs) && (xmlStrEqual(tree->name, BAD_CAST "Description")))
 	    return(tree);
 	tree = tree->next;
     }
@@ -198,7 +198,7 @@ rdfDescription rdfNextDescription(rdfDescription desc) {
     rdfNs = desc->ns;
     desc = desc->next;
     while (desc != NULL) {
-        if ((desc->ns == rdfNs) && (!strcmp(desc->name, "Description")))
+        if ((desc->ns == rdfNs) && (xmlStrEqual(desc->name, BAD_CAST "Description")))
 	    return(desc);
 	desc = desc->next;
     }
@@ -302,7 +302,7 @@ int rdfGetValue(rdfDescription desc, const char *property,
     if (elem != NULL) *elem = NULL;
 
     while (list != NULL) {
-        if ((list->ns == ns) && (!strcmp(list->name, property))) {
+        if ((list->ns == ns) && (xmlStrEqual(list->name, BAD_CAST property))) {
 	    /*
 	     * Found a perfect match, return it !
 	     */
@@ -314,14 +314,14 @@ int rdfGetValue(rdfDescription desc, const char *property,
 		while ((*elem != NULL) && (xmlIsBlankNode(*elem)))
 		    *elem = (*elem)->next;
 	    }
-	    if (!strcmp(list->name, "Bag")) return(RDF_BAG);
-	    if (!strcmp(list->name, "Seq")) return(RDF_SEQ);
-	    if (!strcmp(list->name, "Alt")) return(RDF_ALT);
-	    if (!strcmp(list->name, "Description")) return(RDF_DESC);
+	    if (xmlStrEqual(list->name, BAD_CAST "Bag")) return(RDF_BAG);
+	    if (xmlStrEqual(list->name, BAD_CAST "Seq")) return(RDF_SEQ);
+	    if (xmlStrEqual(list->name, BAD_CAST "Alt")) return(RDF_ALT);
+	    if (xmlStrEqual(list->name, BAD_CAST "Description")) return(RDF_DESC);
 	    return(0);
 	}
 	else if (((list->ns == NULL) || (ns == NULL)) &&
-	         (!strcmp(list->name, property))) {
+	         (xmlStrEqual(list->name, BAD_CAST property))) {
 	    /*
 	     * If more than one "best" match exists, ignore them !
 	     */
@@ -339,10 +339,10 @@ int rdfGetValue(rdfDescription desc, const char *property,
 	    *value = xmlNodeListGetString(desc->doc, best->xmlChildrenNode, 1);
 	}
 	if (elem != NULL) *elem = best->xmlChildrenNode;
-	if (!strcmp(best->name, "Bag")) return(RDF_BAG);
-	if (!strcmp(best->name, "Seq")) return(RDF_SEQ);
-	if (!strcmp(best->name, "Alt")) return(RDF_ALT);
-	if (!strcmp(best->name, "Description")) return(RDF_DESC);
+	if (xmlStrEqual(best->name, BAD_CAST "Bag")) return(RDF_BAG);
+	if (xmlStrEqual(best->name, BAD_CAST "Seq")) return(RDF_SEQ);
+	if (xmlStrEqual(best->name, BAD_CAST "Alt")) return(RDF_ALT);
+	if (xmlStrEqual(best->name, BAD_CAST "Description")) return(RDF_DESC);
 	return(0);
     }
     return(-1);
@@ -363,7 +363,7 @@ void rdfSetValue(rdfDescription desc, const char *property,
      * Search the property.
      */
     while (list != NULL) {
-        if ((list->ns == ns) && (!strcmp(list->name, property))) {
+        if ((list->ns == ns) && (xmlStrEqual(list->name, BAD_CAST property))) {
 	    /*
 	     * Property was found, update it !
 	     */
@@ -399,7 +399,7 @@ void rdfRemoveProperty(rdfDescription desc, const char *property,
      * Search the property.
      */
     while (list != NULL) {
-        if ((list->ns == ns) && (!strcmp(list->name, property))) {
+        if ((list->ns == ns) && (xmlStrEqual(list->name, BAD_CAST property))) {
 	    /*
 	     * Property was found, delete it !
 	     */
@@ -475,10 +475,10 @@ rdfElement rdfNextElem(rdfElement desc) {
  ** Direct access to Element values.
  **/
 int rdfElemGetType(rdfElement elem) {
-    if (!strcmp(elem->name, "Bag")) return(RDF_BAG);
-    if (!strcmp(elem->name, "Seq")) return(RDF_SEQ);
-    if (!strcmp(elem->name, "Alt")) return(RDF_ALT);
-    if (!strcmp(elem->name, "Description")) return(RDF_DESC);
+    if (xmlStrEqual(elem->name, BAD_CAST "Bag")) return(RDF_BAG);
+    if (xmlStrEqual(elem->name, BAD_CAST "Seq")) return(RDF_SEQ);
+    if (xmlStrEqual(elem->name, BAD_CAST "Alt")) return(RDF_ALT);
+    if (xmlStrEqual(elem->name, BAD_CAST "Description")) return(RDF_DESC);
     return(0);
 }
 

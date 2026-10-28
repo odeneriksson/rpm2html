@@ -1,5 +1,13 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rdf_api.c (rdfRead, rdfFirstDescription, rdfNextDescription,
+	rdfGetValue, rdfSetValue, rdfRemoveProperty, rdfElemGetType):
+	Use xmlStrEqual() for libxml2 node-name comparisons instead of
+	passing xmlChar pointers to strcmp().  Keep the existing RDF
+	property-matching and namespace-selection logic unchanged.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* config.c (addConfigEntry): Free the previous trust string, not the
 	directory color, when overriding a repository trust setting.  Avoid
 	dangling color pointers, duplicate frees, and trust-string leaks.
