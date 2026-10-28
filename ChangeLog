@@ -1,5 +1,11 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* compressor.c (main): Check getcwd() for failure and stop with a
+	nonzero exit status instead of constructing a filename from an invalid
+	working directory.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* html.c (dumpIconFile): Add helper to write complete icon data,
 	retry interrupted writes, report write and close errors, and free
 	decompressed icon buffers on all paths.

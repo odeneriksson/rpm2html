@@ -152,7 +152,10 @@ int main(int argc, char **argv)
 
 	main_argc = argc;
 	main_argv = argv;
-        getcwd(pwd, sizeof(pwd));
+        if (getcwd(pwd, sizeof(pwd)) == NULL) {
+            perror("getcwd");
+            return 1;
+        }
 
 	while (--argc > 0) {
 		char *name = *++argv;
