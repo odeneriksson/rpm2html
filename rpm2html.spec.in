@@ -7,15 +7,14 @@ Group: Applications/System
 Source0: http://savannah.nongnu.org/download/rpm2html/rpm2html-%{version}.tar.gz
 URL: http://www.nongnu.org/rpm2html/
 License: MIT
-BuildRoot: %{_tmppath}/%{name}-root
-BuildPreReq: rpm-devel
+BuildRequires: gcc
+BuildRequires: make
+BuildRequires: autoconf
 BuildRequires: automake
-BuildRequires: bzip2-devel
-BuildRequires: libtemplate-devel
+BuildRequires: pkgconf-pkg-config
+BuildRequires: rpm-devel
 BuildRequires: libxml2-devel
-BuildRequires: popt
 BuildRequires: zlib-devel
-Requires: gnupg
 
 %description
 The rpm2html utility automatically generates web pages that describe a
@@ -31,45 +30,24 @@ Install rpm2html if you want a utility for translating information
 from an RPM database into HTML.
 
 %prep
-%setup -q
+%autosetup -p1
 
 %build
-./autogen.sh
-%configure --sysconfdir=/etc \
-	--with-gpg \
-	--with-template
-make %{?_smp_mflags}
-
-# enable 'html_template' option
-sed -i -e 's#^;html_template=rpm2html.tpl#html_template=%{_sysconfdir}/%{name}.tpl#g' rpm2html.config*
+autoreconf -fi
+%configure
+%make_build
 
 %install
-rm -rf $RPM_BUILD_ROOT
-install -d ${RPM_BUILD_ROOT}%{_bindir}
-install -d ${RPM_BUILD_ROOT}%{_sysconfdir}
-install -d ${RPM_BUILD_ROOT}%{_datadir}/rpm2html
-install -d ${RPM_BUILD_ROOT}%{_mandir}/man1
-
-install -m 0755 rpm2html ${RPM_BUILD_ROOT}%{_bindir}
-
-install -m 0644 msg.* ${RPM_BUILD_ROOT}%{_datadir}/rpm2html/
-
-install -m 0644 rpm2html.config rpm2html.tpl ${RPM_BUILD_ROOT}%{_sysconfdir}
-install -m 0644 rpm2html.1  ${RPM_BUILD_ROOT}%{_mandir}/man1/rpm2html.1
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+%make_install
+install -Dpm 0644 rpm2html.tpl %{buildroot}%{_datadir}/rpm2html/rpm2html.tpl
 
 %files
-%defattr(-,root,root)
-%doc CHANGES BUGS Copyright PRINCIPLES README TODO 
-%doc rpm2html-cdrom.config rpm2html-en.config rpm2html-rdf.config
+%license COPYING
+%doc CHANGES BUGS PRINCIPLES README TODO
+%{_bindir}/rpm2html
 %{_datadir}/rpm2html
-%{_bindir}/rpm2html*
-%{_datadir}/rpm2html/msg.*
-%{_mandir}/man1/*
+%{_mandir}/man1/rpm2html.1*
 %config(noreplace) %{_sysconfdir}/rpm2html.config
-%config(noreplace) %{_sysconfdir}/rpm2html.tpl
 
 %changelog
 * Tue Nov  9 2010 Peter Hanecak <hany@hany.sk> 1.11.2-1

@@ -1,5 +1,19 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rpm2html.spec.in: Replace obsolete BuildPreReq, BuildRoot and
+	  dependency declarations with current Fedora BuildRequires for
+	  the C toolchain, Autotools, pkg-config, librpm, libxml2 and zlib.
+	* rpm2html.spec.in: Use %autosetup, autoreconf, %configure,
+	  %make_build and %make_install instead of the historical manual
+	  packaging and installation steps.
+	* rpm2html.spec.in: Track installed files explicitly, install the
+	  HTML template under the application data directory, mark COPYING
+	  as a license and preserve the main configuration as noreplace.
+	* rpm2html.spec.in: Remove build-time assumptions about the
+	  currently unsupported GPG and libtemplate integrations.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rpmopen.c: Replace the legacy rpmdbOpen()/rpmdbInitIterator()
 	  sequence with rpmtsCreate(), rpmtsOpenDB() and
 	  rpmtsInitIterator() for installed-package indexing.
