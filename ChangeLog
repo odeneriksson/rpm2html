@@ -1,5 +1,15 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* FC44-PORT-NOTES.txt: Document prerequisites and commands for
+	  a first Fedora 44 source build, and explain the need to regenerate
+	  Autotools-generated files rather than reuse the 2010 versions.
+	* FC44-PORT-NOTES.txt: Record the RPM API migrations, temporarily
+	  unsupported optional features and the limitations of the local
+	  mock-interface compilation test. State explicitly that Fedora 44
+	  linking and runtime operation remain unverified.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rpm2html.spec.in: Replace obsolete BuildPreReq, BuildRoot and
 	  dependency declarations with current Fedora BuildRequires for
 	  the C toolchain, Autotools, pkg-config, librpm, libxml2 and zlib.

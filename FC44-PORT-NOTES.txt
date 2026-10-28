@@ -1,0 +1,33 @@
+rpm2html 1.11.2 - first Fedora 44 / RPM 6 port
+================================================
+
+This is a preliminary source-port, not a Fedora-44-verified release.
+
+Build dependencies on Fedora 44:
+  sudo dnf install gcc make autoconf automake pkgconf-pkg-config \
+      rpm-devel libxml2-devel zlib-devel
+
+Build:
+  autoreconf -fi
+  ./configure
+  make -j"$(nproc)"
+  ./rpm2html -help
+
+The original configure, Makefile.in and config.h.in are rebuilt by
+'autoreconf -fi'. Do not reuse generated configuration from a different host.
+
+Work done:
+ - use pkg-config for librpm and libxml2
+ - replace removed rpm header access API using rpmtd in rpmopen.c
+ - use rpmts for reading RPM files and the installed RPM database
+ - fix int32_t dependency flag access on x86_64
+ - use modern rpmfi file iteration and strip legacy signature-lead code
+ - disable obsolete and ABI-incompatible custom libxml memory debugger
+ - remove obsolete optional MySQL/GPG/libtemplate configure modes
+
+Caution: This port was syntax-compiled against a local RPM 6 mock interface,
+not real Fedora 44 headers/libraries. The final link and runtime behavior
+MUST be tested on Fedora 44. Legacy HTML processing still has known
+warnings, and the program should not be exposed to untrusted input yet.
+
+Original input: rpm2html-1.11.2.tar.gz (2010 release).
