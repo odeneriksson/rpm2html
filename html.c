@@ -794,31 +794,54 @@ void createDirectory(const char *dirname) {
 #include "dir.png.h"
 #include "new.png.h"
 
+/* The icon data returned by the generated decompressors must be freed. */
+static void dumpIconFile(const char *path, char *content, size_t size)
+{
+    size_t offset = 0;
+    ssize_t written;
+    int fd;
+
+    if (content == NULL) {
+        fprintf(stderr, "Could not decompress %s\n", path);
+        return;
+    }
+
+    fd = creat(path, 0644);
+    if (fd < 0) {
+        fprintf(stderr, "creat() failed on %s: %s\n", path, strerror(errno));
+        free(content);
+        return;
+    }
+
+    while (offset < size) {
+        written = write(fd, content + offset, size - offset);
+        if (written < 0 && errno == EINTR)
+            continue;
+        if (written <= 0) {
+            if (written < 0)
+                fprintf(stderr, "write() failed on %s: %s\n", path, strerror(errno));
+            else
+                fprintf(stderr, "write() returned zero on %s\n", path);
+            break;
+        }
+        offset += written;
+    }
+
+    if (close(fd) != 0)
+        fprintf(stderr, "close() failed on %s: %s\n", path, strerror(errno));
+    free(content);
+}
+
 void dumpDirIcon(void) {
     char path[500];
-    char *content;
-    int fd;
-    /* struct stat *buf; !!!!!! */
 
     if (!rpm2html_dump_html) return;
 
     createDirectory(rpm2html_dir);
     snprintf(path, sizeof(path), "%s/dir.png", rpm2html_dir);
-    content = read_data_buffer_dir_png();
-    if ((fd = creat(path, 0644)) < 0) {
-        fprintf(stderr, "creat() failed on %s\n", path);
-	return;
-    }
-    write(fd, content, data_buffer_dir_png_size);
-    close(fd);
+    dumpIconFile(path, read_data_buffer_dir_png(), data_buffer_dir_png_size);
     snprintf(path, sizeof(path), "%s/new.png", rpm2html_dir);
-    content = read_data_buffer_new_png();
-    if ((fd = creat(path, 0644)) < 0) {
-        fprintf(stderr, "creat() failed on %s\n", path);
-	return;
-    }
-    write(fd, content, data_buffer_new_png_size);
-    close(fd);
+    dumpIconFile(path, read_data_buffer_new_png(), data_buffer_new_png_size);
 }
 
 /*
