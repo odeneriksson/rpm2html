@@ -1,5 +1,11 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* config.c (addConfigEntry): Free the previous trust string, not the
+	directory color, when overriding a repository trust setting.  Avoid
+	dangling color pointers, duplicate frees, and trust-string leaks.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* config.c (configXmlStrdup): Add a local wrapper around libxml2's
 	xmlStrdup() for configuration strings stored as char *.
 	(strndup, rpmDirSearch, addConfigEntry, addHeader): Use the wrapper

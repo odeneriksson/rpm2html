@@ -449,7 +449,7 @@ void addConfigEntry(char *rpmdir, char *name, char *value) {
 	if (cur->color != NULL) xmlFree(cur->color);
 	cur->color = configXmlStrdup(value);
     } else if (!strcasecmp(name, "trust")) {
-	if (cur->trust != NULL) xmlFree(cur->color);
+	if (cur->trust != NULL) xmlFree(cur->trust);
 	cur->trust = configXmlStrdup(value);
     } else if (!strcasecmp(name, "host")) {
 	rpm2html_host = configXmlStrdup(value);
