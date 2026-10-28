@@ -524,17 +524,17 @@ rpmAnalyze(char *path, char *nameRpm, const char *sigtarget,
 
         /* get all the resources provided by this RPM */
     if (!headerGetEntry(h, RPMTAG_SUMMARY, &type, &p, &count) || !p) {
-        rpm->summary = xmlStrdup(localizedStrings[LANG_NO_SUMMARY]);
+        rpm->summary = rpmopenXmlStrdup(localizedStrings[LANG_NO_SUMMARY]);
     } else {
-        rpm->summary = xmlStrdup((char *) p);
+        rpm->summary = rpmopenXmlStrdup((char *) p);
     }
     ENTRY_CLEANUP(p);
     if (!headerGetEntry(h, RPMTAG_DESCRIPTION, &type, &p, &count) || !p ||
         (type != RPM_STRING_TYPE)) {
         rpm->extra->description =
-            xmlStrdup(localizedStrings[LANG_NO_DESCRIPTION]);
+            rpmopenXmlStrdup(localizedStrings[LANG_NO_DESCRIPTION]);
     } else {
-        rpm->extra->description = xmlStrdup((char *) p);
+        rpm->extra->description = rpmopenXmlStrdup((char *) p);
     }
     ENTRY_CLEANUP(p);
     if (!headerGetEntry(h, RPMTAG_DISTRIBUTION, &type, &p, &count) || !p ||
@@ -642,9 +642,9 @@ rpmAnalyze(char *path, char *nameRpm, const char *sigtarget,
     }
     if (!headerGetEntry(h, RPMTAG_BUILDHOST, &type, &p, &count) || !p ||
         (type != RPM_STRING_TYPE)) {
-        rpm->extra->host = xmlStrdup(localizedStrings[LANG_NO_HOST]);
+        rpm->extra->host = rpmopenXmlStrdup(localizedStrings[LANG_NO_HOST]);
     } else {
-        rpm->extra->host = xmlStrdup((char *) p);
+        rpm->extra->host = rpmopenXmlStrdup((char *) p);
     }
     ENTRY_CLEANUP(p);
     if (!headerGetEntry(h, RPMTAG_SIZE, &type, &p, &count) || !p) {
@@ -671,30 +671,30 @@ rpmAnalyze(char *path, char *nameRpm, const char *sigtarget,
     }
     if (!headerGetEntry(h, RPMTAG_SOURCERPM, &type, &p, &count) || !p ||
         (type != RPM_STRING_TYPE)) {
-        rpm->extra->srcrpm = xmlStrdup("");
+        rpm->extra->srcrpm = rpmopenXmlStrdup("");
     } else {
-        rpm->extra->srcrpm = xmlStrdup((char *) p);
+        rpm->extra->srcrpm = rpmopenXmlStrdup((char *) p);
     }
     ENTRY_CLEANUP(p);
     if (!headerGetEntry(h, RPMTAG_URL, &type, &p, &count) || !p ||
         (type != RPM_STRING_TYPE)) {
         rpm->url = NULL;
     } else {
-        rpm->url = xmlStrdup((char *) p);
+        rpm->url = rpmopenXmlStrdup((char *) p);
     }
     ENTRY_CLEANUP(p);
     if (!headerGetEntry(h, RPMTAG_PACKAGER, &type, &p, &count) || !p ||
         (type != RPM_STRING_TYPE)) {
         rpm->extra->packager = NULL;
     } else {
-        rpm->extra->packager = xmlStrdup(protectEmail((char *) p));
+        rpm->extra->packager = rpmopenXmlStrdup(protectEmail((char *) p));
     }
     ENTRY_CLEANUP(p);
     if (!headerGetEntry(h, RPMTAG_LICENSE, &type, &p, &count) || !p ||
         (type != RPM_STRING_TYPE)) {
         rpm->extra->copyright = NULL;
     } else {
-        rpm->extra->copyright = xmlStrdup((char *) p);
+        rpm->extra->copyright = rpmopenXmlStrdup((char *) p);
     }
     ENTRY_CLEANUP(p);
     /* Pick up changelog entries */
@@ -767,21 +767,21 @@ rpmAnalyze(char *path, char *nameRpm, const char *sigtarget,
             *res++ = '\n';
         }
         *res = '\0';
-        rpm->extra->changelog = xmlStrdup(protectEmail(buffer));
+        rpm->extra->changelog = rpmopenXmlStrdup(protectEmail(buffer));
         ENTRY_CLEANUP(names);
     }
     ENTRY_CLEANUP(p);
     if (rpm->vendor == NULL) {
         if (rpm->extra->packager != NULL)
-            rpm->vendor = xmlStrdup(rpm->extra->packager);
+            rpm->vendor = rpmopenXmlStrdup(rpm->extra->packager);
         else
-            rpm->vendor = xmlStrdup(localizedStrings[LANG_UNKNOWN]);
+            rpm->vendor = rpmopenXmlStrdup(localizedStrings[LANG_UNKNOWN]);
     }
 
     /* Signature metadata is not exposed by the old API on RPM 6. */
     rpm->extra->sigs = NULL;
 
-    rpm->filename = xmlStrdup(nameRpm);
+    rpm->filename = rpmopenXmlStrdup(nameRpm);
 
     /* package-xxx.rpm provides at least the resource "package" */
     val = RPMTAG_PROVIDES;
@@ -935,7 +935,7 @@ rpmAnalyze(char *path, char *nameRpm, const char *sigtarget,
 #ifdef HAVE_RPM42
         fi = rpmfiFree(fi);
 #endif
-        rpm->extra->filelist = xmlStrdup(buffer);
+        rpm->extra->filelist = rpmopenXmlStrdup(buffer);
     }
 #ifndef HAVE_RPM42
     ENTRY_CLEANUP(p);

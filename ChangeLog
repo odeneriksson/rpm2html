@@ -1,5 +1,12 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* rpmopen.c (rpmAnalyze): Use the existing rpmopenXmlStrdup()
+	file-local helper for 16 remaining RPM metadata string copies.
+	Keep the libxml2 allocator and xmlFree() ownership unchanged;
+	preserve default values and package metadata handling.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rpmopen.c (rpmopenXmlStrdup): Add a file-local libxml2 string
 	duplication helper returning char *, preserving xmlFree ownership.
 	(rpmDirScanOneDir, rpmDirScanOneDist, rpmDirScanAll): Use it
