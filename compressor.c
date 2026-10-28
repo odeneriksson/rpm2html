@@ -165,6 +165,7 @@ int main(int argc, char **argv)
 
 	while (--argc > 0) {
 		char *name = *++argv;
+                int path_len;
 
                 if (name[0] == '-') {
 		    switch (name[1]) {
@@ -192,12 +193,16 @@ int main(int argc, char **argv)
 		    continue;
 		}
 		if (name[0] != '/') {
-		   strcpy(fullname, pwd);
-                   strcat(fullname, "/");
-                   strcat(fullname, name);
+                   path_len = snprintf(fullname, sizeof(fullname),
+                                       "%s/%s", pwd, name);
 		} else {
-		   strcpy(fullname, name);
+                   path_len = snprintf(fullname, sizeof(fullname),
+                                       "%s", name);
 		}
+                if (path_len < 0 || (size_t) path_len >= sizeof(fullname)) {
+                    fprintf(stderr, "input filename too long: %s\n", name);
+                    return 1;
+                }
 
 		/*
 		 * do the work !

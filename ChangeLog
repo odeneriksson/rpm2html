@@ -1,5 +1,13 @@
 2026-10-29  OpenAI ChatGPT
 
+	* compressor.c (main): Format input pathnames with snprintf()
+	instead of unchecked strcpy() and strcat() calls. Check the
+	length of absolute and working-directory-relative paths before
+	using fullname[512]. Reject paths that do not fit, preserving
+	existing pathnames and generated header contents otherwise.
+
+2026-10-29  OpenAI ChatGPT
+
 	* compressor.c (create_gz_source): Keep the automatically derived
 	output header pathname local to each call rather than storing a
 	pointer to the function's stack buffer in data_file. This fixes a
