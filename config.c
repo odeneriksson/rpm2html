@@ -77,6 +77,13 @@ char **metadata_mirrors = NULL;
 
 void addHeader(char *value);
 
+/* Configuration strings use char *, but retain libxml2 ownership. */
+static char *
+configXmlStrdup(const char *value)
+{
+    return (char *) xmlStrdup(BAD_CAST value);
+}
+
 #ifdef HAVE_STRNDUP
 extern char *strndup (const char *source, size_t len);
 #else /* ! HAVE_STRNDUP */
@@ -87,7 +94,7 @@ char *strndup (const char *source, size_t len) {
     char* tmp = NULL;
 
     if ((source == NULL) || (len < 0)) return(NULL);
-    if (len <= strlen(source)) return xmlStrdup(source);
+    if (len <= strlen(source)) return configXmlStrdup(source);
 
     tmp = xmlMalloc(len+1);
     strncpy(tmp, source, len);
@@ -223,7 +230,7 @@ rpmDirPtr rpmDirSearch(char *dirname) {
     memset(cur, 0, sizeof(rpmDir));
     cur->max_mirrors = 5;
     cur->mirrors = (char **) xmlMalloc(cur->max_mirrors * sizeof(char *));
-    cur->color = xmlStrdup("#ffffff");
+    cur->color = configXmlStrdup("#ffffff");
     cur->dir = NULL;
     cur->files = 0;
     cur->html = 1;
@@ -235,7 +242,7 @@ rpmDirPtr rpmDirSearch(char *dirname) {
     cur->name = NULL;
     cur->nb_mirrors = 0;
     cur->mirrors[0] = NULL;
-    cur->rpmdir = xmlStrdup(dirname);
+    cur->rpmdir = configXmlStrdup(dirname);
     cur->size = 0;
     cur->trust = "1.0";
     cur->trust = NULL;
@@ -269,23 +276,23 @@ void addConfigEntry(char *rpmdir, char *name, char *value) {
      */
     if (!strcasecmp(rpmdir, RPM2HTML_NAME)) {
         if (!strcasecmp(name, "url")) {
-	    rpm2html_url = xmlStrdup(value);
+	    rpm2html_url = configXmlStrdup(value);
 	} else if (!strcasecmp(name, "maint")) {
-	    rpm2html_maint = xmlStrdup(value);
+	    rpm2html_maint = configXmlStrdup(value);
 	} else if (!strcasecmp(name, "help")) {
-	    rpm2html_help = xmlStrdup(value);
+	    rpm2html_help = configXmlStrdup(value);
 	} else if (!strcasecmp(name, "mail")) {
-	    rpm2html_mail = xmlStrdup(value);
+	    rpm2html_mail = configXmlStrdup(value);
 	} else if (!strcasecmp(name, "dir")) {
-	    rpm2html_dir = xmlStrdup(value);
+	    rpm2html_dir = configXmlStrdup(value);
 	} else if (!strcasecmp(name, "ftp")) {
-	    rpm2html_ftp = xmlStrdup(value);
+	    rpm2html_ftp = configXmlStrdup(value);
 	} else if (!strcasecmp(name, "ftpsrc")) {
-	    rpm2html_ftpsrc = xmlStrdup(value);
+	    rpm2html_ftpsrc = configXmlStrdup(value);
 	} else if (!strcasecmp(name, "name")) {
-	    rpm2html_name = xmlStrdup(value);
+	    rpm2html_name = configXmlStrdup(value);
 	} else if (!strcasecmp(name, "host")) {
-	    rpm2html_host = xmlStrdup(value);
+	    rpm2html_host = configXmlStrdup(value);
 	} else if (!strcasecmp(name, "tree")) {
 	    if ((!strcasecmp(value, "true")) ||
 	        (!strcasecmp(value, "yes"))) {
@@ -309,7 +316,7 @@ void addConfigEntry(char *rpmdir, char *name, char *value) {
 		printf("\tuse \"rdf=true\" or \"rdf=false\"\n");
 	    }
 	} else if (!strcasecmp(name, "rdf_dir")) {
-	    rpm2html_rdf_dir = xmlStrdup(value);
+	    rpm2html_rdf_dir = configXmlStrdup(value);
 	} else if (!strcasecmp(name, "rdf_resources")) {
 	    if ((!strcasecmp(value, "true")) ||
 	        (!strcasecmp(value, "yes"))) {
@@ -322,7 +329,7 @@ void addConfigEntry(char *rpmdir, char *name, char *value) {
 		printf("\tuse \"rdf_resources=true\" or \"rdf_resources=false\"\n");
 	    }
 	} else if (!strcasecmp(name, "rdf_resources_dir")) {
-	    rpm2html_rdf_resources_dir = xmlStrdup(value);
+	    rpm2html_rdf_resources_dir = configXmlStrdup(value);
 	} else if (!strcasecmp(name, "rdf_count_limit")) {
 	    rpm2html_rdf_count_limit = strtol(value, &temp, 10);
 	    if ((*value == '\0') || (*temp != '\0')) {
@@ -343,7 +350,7 @@ void addConfigEntry(char *rpmdir, char *name, char *value) {
 	    }
         #ifdef HAVE_LIBTEMPLATE
 	} else if (!strcasecmp(name, "html_template")) {
-	    rpm2html_html_template = xmlStrdup(value);
+	    rpm2html_html_template = configXmlStrdup(value);
         #endif
 	} else if (!strcasecmp(name, "protectemails")) {
 	    if ((!strcasecmp(value, "true")) ||
@@ -413,7 +420,7 @@ void addConfigEntry(char *rpmdir, char *name, char *value) {
 		    exit(1);
 		}
 	    }
-	    metadata_mirrors[nb_metadata_mirrors++] = xmlStrdup(value);
+	    metadata_mirrors[nb_metadata_mirrors++] = configXmlStrdup(value);
 	} else {
 	    printf("Config file : %s entry for [metadata] ignored\n", name);
 	}
@@ -425,29 +432,29 @@ void addConfigEntry(char *rpmdir, char *name, char *value) {
      */
     cur = rpmDirSearch(rpmdir);
     if (!strcasecmp(name, "name")) {
-	cur->name = xmlStrdup(value);
+	cur->name = configXmlStrdup(value);
     } else if (!strcasecmp(name, "dir")) {
-	cur->dir = xmlStrdup(value);
+	cur->dir = configXmlStrdup(value);
     } else if (!strcasecmp(name, "subdir")) {
-	cur->subdir = xmlStrdup(value);
+	cur->subdir = configXmlStrdup(value);
     } else if (!strcasecmp(name, "dbpath")) {   /* Added by A. Gibert */
-       cur->dbpath = xmlStrdup(value);   /* Added by A. Gibert */
+       cur->dbpath = configXmlStrdup(value);   /* Added by A. Gibert */
     } else if (!strcasecmp(name, "url")) {
-	cur->url = xmlStrdup(value);
+	cur->url = configXmlStrdup(value);
     } else if (!strcasecmp(name, "ftp")) {
-	cur->ftp = xmlStrdup(value);
+	cur->ftp = configXmlStrdup(value);
     } else if (!strcasecmp(name, "ftpsrc")) {
-	cur->ftpsrc = xmlStrdup(value);
+	cur->ftpsrc = configXmlStrdup(value);
     } else if (!strcasecmp(name, "color")) {
 	if (cur->color != NULL) xmlFree(cur->color);
-	cur->color = xmlStrdup(value);
+	cur->color = configXmlStrdup(value);
     } else if (!strcasecmp(name, "trust")) {
 	if (cur->trust != NULL) xmlFree(cur->color);
-	cur->trust = xmlStrdup(value);
+	cur->trust = configXmlStrdup(value);
     } else if (!strcasecmp(name, "host")) {
-	rpm2html_host = xmlStrdup(value);
+	rpm2html_host = configXmlStrdup(value);
     } else if (!strcasecmp(name, "rdf_dir")) {
-	rpm2html_rdf_dir = xmlStrdup(value);
+	rpm2html_rdf_dir = configXmlStrdup(value);
     } else if (!strcasecmp(name, "html")) {
 	if ((!strcasecmp(value, "true")) ||
 	    (!strcasecmp(value, "yes"))) {
@@ -505,7 +512,7 @@ void addConfigEntry(char *rpmdir, char *name, char *value) {
 		exit(1);
 	    }
 	}
-	cur->mirrors[cur->nb_mirrors++] = xmlStrdup(value);
+	cur->mirrors[cur->nb_mirrors++] = configXmlStrdup(value);
     } else {
 	printf("Config file : %s entry for [%s] ignored\n", name, rpmdir);
     }
@@ -561,7 +568,7 @@ void addHeader(char *value) {
     while (!IS_BLANK(name)) name++;
     save = *name;
     *name = 0;
-    url = xmlStrdup(value);
+    url = configXmlStrdup(value);
     *name = save;
     if (url == NULL) {
         fprintf(stderr, "strndup \"%s\" failed\n", value);
@@ -578,7 +585,7 @@ void addHeader(char *value) {
     /*
      * Store the values in global variables.
      */
-    rpm2html_headers_name[rpm2html_nb_extra_headers] = xmlStrdup(name);
+    rpm2html_headers_name[rpm2html_nb_extra_headers] = configXmlStrdup(name);
     rpm2html_headers_url[rpm2html_nb_extra_headers] = url;
     rpm2html_nb_extra_headers++;
 }

@@ -1,5 +1,13 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* config.c (configXmlStrdup): Add a local wrapper around libxml2's
+	xmlStrdup() for configuration strings stored as char *.
+	(strndup, rpmDirSearch, addConfigEntry, addHeader): Use the wrapper
+	instead of passing char * values directly to xmlStrdup().  Retain
+	libxml2 allocation ownership and existing configuration APIs.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* language.c (readLanguageFile): Explicitly convert the input to
 	libxml2's xmlChar type and the duplicated result back to the
 	existing char * translation table.  Keep string contents and
