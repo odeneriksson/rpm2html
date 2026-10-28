@@ -134,7 +134,7 @@ const char *stringAdd(const char *str) {
 	cur = cur->next;
     }
     cur = xmlMalloc(sizeof(stringHash));
-    cur->val = xmlStrdup(str);
+    cur->val = (const char *) xmlStrdup(BAD_CAST str);
     cur->use = 1;
     cur->next = stringHashTable[key];
     stringHashTable[key] = cur;
@@ -165,7 +165,7 @@ void  stringFree(const char *str) {
 
 #else /* ! WITH_STRING_BUF */
 const char *stringAdd(const char *str) {
-    return(xmlStrdup(str));
+    return((const char *) xmlStrdup(BAD_CAST str));
 }
 void  stringFree(const char *str) {
     xmlFree((char *) str);

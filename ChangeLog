@@ -1,5 +1,11 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* stringbuf.c (stringAdd): Explicitly convert between the module's
+	const char * interface and libxml2's xmlChar * interface when
+	duplicating strings, in both buffered and unbuffered builds.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rdf_api.c (rdfAddDescription): Stop querying deprecated libxml2
 	oldXMLWDcompatibility state. Always emit the standard RDF "about"
 	attribute, as the default code path already did. Retain the
