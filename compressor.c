@@ -26,16 +26,17 @@ int main_argc;
 char **main_argv;
 char pwd[MAX_PATH_LENGHT];
 
-void create_gz_source(char *filename) {
+int create_gz_source(char *filename) {
     char outputfile[MAX_PATH_LENGHT];
-    Bytef *input;
+    Bytef *input = NULL;
     int size;
-    Bytef *output;
+    Bytef *output = NULL;
     uLongf outsize;
     int res;
     struct stat st;
-    int fd;
-    FILE *result;
+    int fd = -1;
+    FILE *result = NULL;
+    int status = 1;
     const char *output_path = data_file;
     int i;
     
@@ -45,21 +46,29 @@ void create_gz_source(char *filename) {
     fd = open(filename, O_RDONLY);
     if (fd < 0) {
 	    perror("mkdep: open");
-	    return;
+	    goto cleanup;
     }
-    fstat(fd, &st);
+    if (fstat(fd, &st) < 0) {
+        perror("fstat failed");
+        goto cleanup;
+    }
     size = st.st_size;
     input = malloc(size);
     if (input == NULL) {
 	perror("malloc failed");
-	exit(1);
+	goto cleanup;
     }
     res = read(fd, input, size);
     if (res < size) {
 	perror("read didn't complete");
-	exit(1);
+	goto cleanup;
     }
-    close(fd);
+    if (close(fd) < 0) {
+        perror("close failed");
+        fd = -1;
+        goto cleanup;
+    }
+    fd = -1;
 
     /*
      * allocate an output buffer for the compressed result.
@@ -68,7 +77,7 @@ void create_gz_source(char *filename) {
     output = malloc(outsize);
     if (output == NULL) {
 	perror("malloc failed");
-	exit(1);
+	goto cleanup;
     }
 
     /*
@@ -76,7 +85,7 @@ void create_gz_source(char *filename) {
      */
     if (compress(output, (uLongf *) &outsize, input, size) != Z_OK) {
         fprintf(stderr, "compress failed\n");
-	exit(1);
+	goto cleanup;
     }
 
     /*
@@ -86,7 +95,7 @@ void create_gz_source(char *filename) {
         int len = snprintf(outputfile, sizeof(outputfile), "%s.h", filename);
         if (len < 0 || (size_t) len >= sizeof(outputfile)) {
             fprintf(stderr, "output header filename too long: %s\n", filename);
-            exit(1);
+            goto cleanup;
         }
         output_path = outputfile;
     }
@@ -94,7 +103,7 @@ void create_gz_source(char *filename) {
     if (result == NULL) {
         fprintf(stderr, "fopen(%s)", output_path);
 	perror("failed");
-	exit(1);
+	goto cleanup;
     }
     fprintf(result, "/* output from compressor, need #include <zlib.h>\" */\n");
     fprintf(result, "#define %s_size %d\n", data_name, size);
@@ -123,9 +132,26 @@ void create_gz_source(char *filename) {
     /* The generated API returns char *, while zlib uses Bytef *. */
     fprintf(result, "    return((char *) buffer);\n}\n");
 
-    fclose(result);
+    if (ferror(result)) {
+        fprintf(stderr, "write failed: %s\n", output_path);
+        goto cleanup;
+    }
+    if (fclose(result) != 0) {
+        result = NULL;
+        perror("fclose failed");
+        goto cleanup;
+    }
+    result = NULL;
+    status = 0;
+
+cleanup:
+    if (result != NULL)
+        fclose(result);
+    if (fd >= 0)
+        close(fd);
     free(output);
     free(input);
+    return status;
 }
 
 void message(char *fmt, ...)
@@ -142,6 +168,8 @@ char *get_data_name(char *filename) {
     char *cur;
 
     res = (char *) malloc((strlen(filename) + 20) * sizeof(char));
+    if (res == NULL)
+        return NULL;
     sprintf(res, "data_buffer_%s", filename);
     cur = res;
     while (*cur != '\0') {
@@ -216,9 +244,16 @@ int main(int argc, char **argv)
 		 */
 		if (data_name == NULL) {
 		    generated_name = get_data_name(name);
+                    if (generated_name == NULL) {
+                        perror("malloc failed");
+                        return 1;
+                    }
 		    data_name = generated_name;
 		}
-		create_gz_source(fullname);
+		if (create_gz_source(fullname) != 0) {
+                    free(generated_name);
+                    return 1;
+                }
 		free(generated_name);
 		/* Apply an explicit -n name only to the next input file. */
 		data_name = NULL;

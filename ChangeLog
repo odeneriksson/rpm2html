@@ -1,5 +1,15 @@
 2026-10-29  OpenAI ChatGPT
 
+	* compressor.c (create_gz_source): Return a status to the caller.
+	Close input and output streams and free temporary allocations on
+	all detected open, stat, read, allocation, compression, filename,
+	and output errors.  Diagnose failed writes and fclose calls.
+	(get_data_name): Propagate allocation failure to the caller.
+	(main): Check generated-name allocation and compressor status;
+	free per-file allocated names before returning a failure.
+
+2026-10-29  OpenAI ChatGPT
+
 	* compressor.c (create_gz_source): Free the input and compressed
 	output buffers once the generated C header has been written.
 	(main): Free only automatically allocated data names after each
