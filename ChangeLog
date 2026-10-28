@@ -1,5 +1,14 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* cleanup.c (rpmOneFileCleanup, rpmOneResourceCleanup): Check the
+	RPM namespace pointer after looking it up, rather than testing the
+	already validated RDF namespace again.  Test the first description
+	pointer when rejecting empty RDF documents, rather than testing
+	the RDF namespace a third time.  Preserve existing cleanup policy
+	for invalid package and resource RDF files.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rdf.c (rpmOpenRdfFile): Check rpm->extra after allocating the
 	extra data, rather than checking the already allocated rpm pointer.
 	On allocation failure, release the rpm data and parsed RDF schema.

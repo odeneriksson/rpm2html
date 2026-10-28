@@ -118,7 +118,7 @@ static void rpmOneFileCleanup(char *file) {
 	return;
     }
     rpmNs = rdfGetNamespace(rdf, "http://www.rpm.org/");
-    if (rdfNs == NULL) {
+    if (rpmNs == NULL) {
 	if (rpm2htmlVerbose)
 	    printf("%s is not an RPM specific RDF schema\n", file);
 	rdfDestroySchema(rdf);
@@ -127,7 +127,7 @@ static void rpmOneFileCleanup(char *file) {
 	return;
     }
     desc = rdfFirstDescription(rdf);
-    if (rdfNs == NULL) {
+    if (desc == NULL) {
 	if (rpm2htmlVerbose)
 	    printf("%s RDF schema seems empty\n", file);
 	rdfDestroySchema(rdf);
@@ -348,7 +348,7 @@ static void rpmOneResourceCleanup(char *file) {
 	return;
     }
     rpmNs = rdfGetNamespace(rdf, "http://www.rpm.org/");
-    if (rdfNs == NULL) {
+    if (rpmNs == NULL) {
 	if (rpm2htmlVerbose)
 	    printf("%s is not an RPM specific RDF schema\n", file);
 	rdfDestroySchema(rdf);
@@ -357,7 +357,7 @@ static void rpmOneResourceCleanup(char *file) {
 	return;
     }
     desc = rdfFirstDescription(rdf);
-    if (rdfNs == NULL) {
+    if (desc == NULL) {
 	if (rpm2htmlVerbose)
 	    printf("%s RDF schema seems empty\n", file);
 	rdfDestroySchema(rdf);
