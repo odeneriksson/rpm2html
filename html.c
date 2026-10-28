@@ -4389,9 +4389,7 @@ rpmDataPtr dumpDirIndex(rpmDirPtr dir, rpmSubdirPtr tree, rpmDataPtr list) {
  */
 
 void rpmDumpHtmlRealTreeTitle(FILE *subdir, rpmDirPtr dir, char *buffer) {
-#ifndef HAVE_LIBTEMPLATE
-    char buf[3000];
-#endif
+#ifdef HAVE_LIBTEMPLATE
     char tmp[1000];
     char path[1000];
     char loc[200];
@@ -4399,7 +4397,6 @@ void rpmDumpHtmlRealTreeTitle(FILE *subdir, rpmDirPtr dir, char *buffer) {
     int l = 0; /* index for directory depth */
 
     /* link for the root */
-#ifdef HAVE_LIBTEMPLATE
     tpl_element_set(engine, "name", dir->name);
     parseNwriteTemplate(subdir, engine, "realtree_title_header");
     while (buffer[i] != '\0') {
@@ -4425,33 +4422,31 @@ void rpmDumpHtmlRealTreeTitle(FILE *subdir, rpmDirPtr dir, char *buffer) {
 
     parseNwriteTemplate(subdir, engine, "realtree_title_footer");
 
-#else	// ifdef HAVE_LIBTEMPLATE
+#else /* !HAVE_LIBTEMPLATE */
+    const char *suffix = localizedStrings[LANG_TREE_HTML];
+    size_t i, segment_start = 0;
+    int depth = 0;
 
-    snprintf(buf, sizeof(buf), "<a href=\"%s\">/</a>",
-	     localizedStrings[LANG_TREE_HTML]);
-    while (buffer[i] != '\0') {
-        if (buffer[i] == '_') {
-	    loc[j] = '\0';
-	    path[k++] = '_';
-	    path[k] = '\0';
-	    if (l++)
-	    	snprintf(tmp, sizeof(tmp), " <a href=\"%s%s\">/%s</a>", path,
-	            	localizedStrings[LANG_TREE_HTML], loc);
-	    else
-	    	snprintf(tmp, sizeof(tmp), " <a href=\"%s%s\">%s</a>", path,
-	            	localizedStrings[LANG_TREE_HTML], loc);
-            strcat(buf, tmp);
-	    j = 0;
-	} else {
-	    loc[j++] = buffer[i];
-	    path[k++] = buffer[i];
-	}
-        i++;
+    /* Stream the breadcrumb links rather than truncating fixed buffers. */
+    fprintf(subdir, "<h1 align=center><a href=\"Root%s\">%s</a> : "
+                    "<a href=\"%s\">/</a>",
+            suffix, dir->name, suffix);
+    for (i = 0; buffer[i] != '\0'; i++) {
+        if (buffer[i] != '_')
+            continue;
+
+        fputs(" <a href=\"", subdir);
+        fwrite(buffer, 1, i + 1, subdir);
+        fputs(suffix, subdir);
+        fputs("\">", subdir);
+        if (depth++)
+            fputc('/', subdir);
+        fwrite(buffer + segment_start, 1, i - segment_start, subdir);
+        fputs("</a>", subdir);
+        segment_start = i + 1;
     }
-
-    fprintf(subdir, "<h1 align=center><a href=\"Root%s\">%s</a> : %s</h1>\n",
-            localizedStrings[LANG_TREE_HTML], dir->name, buf);
-#endif	// ifdef HAVE_LIBTEMPLATE
+    fputs("</h1>\n", subdir);
+#endif /* HAVE_LIBTEMPLATE */
 }
 
 /*

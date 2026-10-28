@@ -1,5 +1,15 @@
 2026-10-28  Oden Eriksson <5888236+odeneriksson@users.noreply.github.com>
 
+	* html.c (rpmDumpHtmlRealTreeTitle): Write breadcrumb links directly
+	to the output stream in the non-template HTML generator rather than
+	assembling them in fixed-size temporary buffers.  Use length-bounded
+	writes for the directory prefix and current component to avoid
+	truncated hyperlinks and buffer overflows on long directory paths.
+	Preserve the existing markup for ordinary paths.  Leave the optional
+	template renderer unchanged.
+
+2026-10-28  Oden Eriksson <5888236+odeneriksson@users.noreply.github.com>
+
 	* html.c (htmlFileName): Return an empty filename if the supplied
 	buffer is too small to hold the HTML suffix.  Avoid producing a
 	truncated suffix and silence the GCC format-truncation diagnostic.
