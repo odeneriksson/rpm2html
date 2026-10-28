@@ -178,7 +178,6 @@ int
 checkResourceName(const char *res)
 {
     int isname = 0;
-    const char *base = res;
 
     if (*res == 0)
         return (0);
@@ -237,7 +236,6 @@ checkReleaseName(const char *res)
 int
 checkGroupName(const char *res)
 {
-    const char *base = res;
 
     while (*res != 0) {
         if (((*res >= 'A') && (*res <= 'Z')) ||
@@ -261,7 +259,6 @@ checkGroupName(const char *res)
 int
 checkVersionName(const char *res)
 {
-    const char *base = res;
 
     if (*res == 0)
         return (0);
