@@ -1,5 +1,13 @@
 2026-10-28  OpenAI ChatGPT
 
+	* compressor.c (create_gz_source): Explicitly cast the zlib Bytef
+	buffer to char * in the generated PNG decompressor's return
+	statement. Keep the generated function's existing char * interface,
+	malloc/free ownership, compressed bytes and image contents intact.
+	Do not patch generated dir.png.h and new.png.h directly.
+
+2026-10-28  OpenAI ChatGPT
+
 	* html.c (xmlStrdupHTML): Explicitly convert the C string argument
 	to libxml2 xmlChar with BAD_CAST, then return the newly allocated
 	libxml2 string as char *. Keep the existing allocation ownership.

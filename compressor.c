@@ -115,7 +115,8 @@ void create_gz_source(char *filename) {
     fprintf(result, "        return(NULL);\n");
     fprintf(result, "    }\n");
     fprintf(result, "    buffer[%d] = '\\0';\n", size);
-    fprintf(result, "    return(buffer);\n}\n");
+    /* The generated API returns char *, while zlib uses Bytef *. */
+    fprintf(result, "    return((char *) buffer);\n}\n");
 
     fclose(result);
 }
