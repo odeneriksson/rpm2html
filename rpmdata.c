@@ -707,7 +707,7 @@ rpmSubdirPtr rpmNewSubdir(rpmSubdirPtr dir, const char *name,
         res->color = NULL;
     res->html = html;
 
-    memset(res->subdirs, 0, sizeof(res->subdirs));
+    memset(res->subdirs, 0, res->max_subdirs * sizeof(*res->subdirs));
     if (dir == NULL) {
         res->htmlpath = xmlStrdup(name);
 	res->parent = NULL;

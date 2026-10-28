@@ -1,5 +1,12 @@
 2026-10-28  Oden Eriksson <5888236+odeneriksson@users.noreply.github.com>
 
+	* rpmdata.c (rpmNewSubdir): Initialize the entire dynamically
+	allocated subdirectory pointer table rather than only one pointer.
+	Use the allocated element count and the pointed-to element size
+	to keep initialization correct if the table size changes.
+
+2026-10-28  Oden Eriksson <5888236+odeneriksson@users.noreply.github.com>
+
 	* html.c (convertCVE): Return a const-qualified string pointer to
 	preserve the input string's constness when CVE hyperlink generation
 	is disabled.  The generated hyperlink buffer and existing callers
