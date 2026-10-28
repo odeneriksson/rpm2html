@@ -728,7 +728,7 @@ void htmlCleanup(void) {
  */
 
 char *xmlStrdupHTML(const char *str) {
-    return(xmlStrdup(convertHTML(str)));
+    return((char *) xmlStrdup(BAD_CAST convertHTML(str)));
 }
 
 /*
@@ -754,7 +754,7 @@ void createDirectory(const char *dirname) {
 		return;
 #endif
 	    case ENOENT: {
-	        char *father = xmlStrdup(dirname);
+	        char *father = (char *) xmlStrdup(BAD_CAST dirname);
 		char *cur = &father[strlen(father)];
 
 		while (cur > father) {

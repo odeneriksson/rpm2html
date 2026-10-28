@@ -1,5 +1,14 @@
 2026-10-28  OpenAI ChatGPT
 
+	* html.c (xmlStrdupHTML): Explicitly convert the C string argument
+	to libxml2 xmlChar with BAD_CAST, then return the newly allocated
+	libxml2 string as char *. Keep the existing allocation ownership.
+	(createDirectory): Explicitly convert the directory name to
+	xmlChar when duplicating with xmlStrdup, and retain the char *
+	working copy freed by xmlFree. No change to recursion or errors.
+
+2026-10-28  OpenAI ChatGPT
+
 	* html.c (sigInfoMD5, sigInfoGPG, sigInfoPGP, sigInfoU): Use
 	char pointers for C string literals returned by convertSIG().
 	(sbuffer, sbuffer2): Declare text buffers as char pointers to match
