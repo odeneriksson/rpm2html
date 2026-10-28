@@ -1,5 +1,16 @@
 2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
 
+	* language.c (readLanguageFile): Use %zu to print the number of
+	localized messages, which has type size_t.
+	* rdf.c (rpmOpenRdfFile): Use %zu for sizeof values in
+	allocation failure diagnostics.
+	* rpmdata.c (rpmRessAdd, rpmRequAdd): Likewise, use %zu for
+	allocation sizes computed with sizeof.
+	* rpmopen.c (rpmAnalyze): Likewise.  Retain %d for the
+	separate diagnostic that prints the int-sized buffer_size.
+
+2026-10-28  Oden Eriksson  <5888236+odeneriksson@users.noreply.github.com>
+
 	* rdf.c (dumpDistListRdf): Compare existing RDF contents only
 	after a successful read.  Free the generated RDF buffer when
 	opening the output file fails.  Report fclose errors that may

@@ -210,7 +210,7 @@ rpmRessPtr rpmRessAdd(char *ress, rpmDataPtr rpm, int installed) {
     /* not found allocate a new resource block and fill it */
     cur = (rpmRessPtr) xmlMalloc(sizeof(rpmRess));
     if (cur == NULL) {
-         fprintf(stderr, "cannot allocate %d bytes: %s\n", sizeof(rpmRess),
+         fprintf(stderr, "cannot allocate %zu bytes: %s\n", sizeof(rpmRess),
 	         strerror(errno));
          return(NULL);
     }
@@ -219,7 +219,7 @@ rpmRessPtr rpmRessAdd(char *ress, rpmDataPtr rpm, int installed) {
     cur->provider = (rpmDataPtr *) xmlMalloc(cur->max_provider *
                                           sizeof(rpmDataPtr));
     if (cur->provider == NULL) {
-         fprintf(stderr, "cannot allocate %d bytes: %s\n", 
+         fprintf(stderr, "cannot allocate %zu bytes: %s\n", 
 	         cur->max_provider * sizeof(rpmDataPtr),
 	         strerror(errno));
          return(NULL);
@@ -279,7 +279,7 @@ rpmRessPtr rpmRequAdd(char *requ, char * requv, rpm_dep_flag requf, rpmDataPtr r
     /* not found allocate a new resource block and fill it */
     cur = (rpmRessPtr) xmlMalloc(sizeof(rpmRess));
     if (cur == NULL) {
-         fprintf(stderr, "cannot allocate %d bytes: %s\n", sizeof(rpmRess),
+         fprintf(stderr, "cannot allocate %zu bytes: %s\n", sizeof(rpmRess),
 	         strerror(errno));
          return(NULL);
     }
@@ -288,7 +288,7 @@ rpmRessPtr rpmRequAdd(char *requ, char * requv, rpm_dep_flag requf, rpmDataPtr r
     cur->provider = (rpmDataPtr *) xmlMalloc(cur->max_provider *
                                           sizeof(rpmDataPtr));
     if (cur->provider == NULL) {
-         fprintf(stderr, "cannot allocate %d bytes: %s\n", 
+         fprintf(stderr, "cannot allocate %zu bytes: %s\n", 
 	         cur->max_provider * sizeof(rpmDataPtr),
 	         strerror(errno));
          return(NULL);

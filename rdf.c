@@ -191,14 +191,14 @@ rpmDataPtr rpmOpenRdfFile(char *file) {
      */
     rpm = (rpmDataPtr) xmlMalloc(sizeof(rpmData));
     if (rpm == NULL) {
-        fprintf(stderr, "cannot allocate %d bytes: %s\n", sizeof(rpmData),
+        fprintf(stderr, "cannot allocate %zu bytes: %s\n", sizeof(rpmData),
 	        strerror(errno));
         return(NULL);
     }
     memset(rpm, 0, sizeof(rpmData));
     rpm->extra = (rpmExtraDataPtr) xmlMalloc(sizeof(rpmExtraData));
     if (rpm == NULL) {
-        fprintf(stderr, "cannot allocate %d bytes: %s\n", sizeof(rpmExtraData),
+        fprintf(stderr, "cannot allocate %zu bytes: %s\n", sizeof(rpmExtraData),
 	        strerror(errno));
         return(NULL);
     }

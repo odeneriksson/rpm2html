@@ -213,7 +213,7 @@ int readLanguageFile(char *filename)
 		 */
 		if (currentString >= NB_STRINGS) {
 		    fprintf(stderr,
-	      "File %s contains too many localized messages (%d expected)\n",
+	      "File %s contains too many localized messages (%zu expected)\n",
 		      filename, NB_STRINGS);
 		    break;
 		}
