@@ -1,3 +1,15 @@
+rpm2html 2.0
+************
+
+First modernized release since rpm2html 1.11.2.
+
+- Ported to modern RPM libraries.
+- Updated build system for Fedora 44.
+- Fixed compiler warnings and compatibility issues.
+- Fixed buffer overflows and memory leaks.
+- Improved CVE identifier handling.
+- Improved compressor reliability.
+
 rpm2html 1.11.2
 ***************
 

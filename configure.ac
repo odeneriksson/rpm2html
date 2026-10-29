@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([rpm2html], [1.11.2])
+AC_INIT([rpm2html], [2.0])
 AC_CONFIG_SRCDIR([rpm2html.c])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([foreign])

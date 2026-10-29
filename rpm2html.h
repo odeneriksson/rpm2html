@@ -16,10 +16,10 @@
  * General setup default values overriden by config file.
  */
 #define RPM2HTML_NAME	"rpm2html"
-#define RPM2HTML_VER	"1.11.2"
-#define RPM2HTML_URL    "http://www.nongnu.org/rpm2html/"
-#define RPM2HTML_MAINT	"Peter Hanecak"
-#define RPM2HTML_MAIL 	"hany@hany.sk"
+#define RPM2HTML_VER	"2.0"
+#define RPM2HTML_URL    "https://github.com/odeneriksson/rpm2html"
+#define RPM2HTML_MAINT	"Oden Eriksson"
+#define RPM2HTML_MAIL 	"5888236+odeneriksson@users.noreply.github.com"
 
 /*
  * Constants.

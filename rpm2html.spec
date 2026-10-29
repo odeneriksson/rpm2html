@@ -1,13 +1,10 @@
 Summary: Translates an RPM database and dependency information into HTML
 Name: rpm2html 
-%define version 1.11.2
-Version: %{version}
+Version: 2.0
 Release: 1%{?dist}
-Group: Applications/System
-Source0: http://savannah.nongnu.org/download/rpm2html/rpm2html-%{version}.tar.gz
-URL: http://www.nongnu.org/rpm2html/
+Source0: https://github.com/odeneriksson/rpm2html/archive/refs/tags/v%{version}.tar.gz
+URL: https://github.com/odeneriksson/rpm2html/
 License: MIT
-BuildRoot: %{_tmppath}/%{name}-root
 BuildPreReq: rpm-devel
 BuildRequires: automake
 BuildRequires: bzip2-devel

@@ -3,9 +3,8 @@ Name: rpm2html
 %define version @VERSION@
 Version: %{version}
 Release: 1%{?dist}
-Group: Applications/System
-Source0: http://savannah.nongnu.org/download/rpm2html/rpm2html-%{version}.tar.gz
-URL: http://www.nongnu.org/rpm2html/
+Source0: https://github.com/odeneriksson/rpm2html/archive/refs/tags/v%{version}.tar.gz
+URL: https://github.com/odeneriksson/rpm2html/
 License: MIT
 BuildRequires: gcc
 BuildRequires: make
@@ -50,7 +49,10 @@ install -Dpm 0644 rpm2html.tpl %{buildroot}%{_datadir}/rpm2html/rpm2html.tpl
 %config(noreplace) %{_sysconfdir}/rpm2html.config
 
 %changelog
-* Tue Nov  9 2010 Peter Hanecak <hany@hany.sk> 1.11.2-1
+* Thu Oct 29 2026 Oden Eriksson <5888236+odeneriksson@users.noreply.github.com> - 2.0-1
+- revival deluxe
+
+* Tue Nov 09 2010 Peter Hanecak <hany@hany.sk> 1.11.2-1
 - configure.in rpm2html.h: release 1.11.1 (development release)
 - NEWS rpm2html.spec.in: updated
 - config.c, html.c, rpm2html.config.test, rpm2html-en.config, rpm2html.h,
